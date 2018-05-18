@@ -1,0 +1,182 @@
+<template>
+  <v-container
+    fluid
+    style="min-height: 0;"
+    grid-list-lg>
+    <v-card height="25px" flat color="transparent" id="tl-0"></v-card>
+    <v-layout row wrap>
+      <template>
+        <timeline id="tl" ref="tl" timeline-theme="#ffbb00">
+          <div v-for="item in items" :key="item.title" :id="item.title">
+            <timeline-item color="#ffbb00" line-color="#ffffff">
+              <v-card :id="'tl-' + item.id">
+                <div class="detail">
+                  <v-layout row wrap>
+                    <v-flex d-flex xs3>
+                      <img :src="getPicture(item.image)" style="height: 90px;">
+                    </v-flex>
+                    <v-flex xs9>
+                      <div style="padding-left: 10px;">
+                        <div style="text-align: left; margin-bottom: 8px;">
+                          <strong>{{ item.title }}</strong>
+                          <span class="now" v-if="item.now">Sekarang</span>
+                        </div>
+                        <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
+                          {{ item.dresscode }}
+                        </div>
+                        <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
+                          {{ item.time }}
+                        </div>
+                        <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
+                          {{ item.date }}
+                        </div>
+                        <div class="bullet location" style="text-align: left;">
+                          {{ item.location }}
+                        </div>
+                      </div>
+                    </v-flex>
+                  </v-layout>
+                </div>
+              </v-card>
+            </timeline-item>
+          </div>
+        </timeline>
+      </template>
+    </v-layout>
+  </v-container>
+</template>
+<script>
+import { Timeline, TimelineItem, TimelineTitle } from 'vue-cute-timeline'
+import commons from '../../libs/commons'
+export default {
+  name: 'dashboard',
+  components: {
+    Timeline,
+    TimelineItem,
+    TimelineTitle
+  },
+  data () {
+    return {
+      items: [
+        {
+          id: 1,
+          title: 'Pre-event',
+          image: 'pre_event_new.png',
+          dresscode: 'Bebas, rapi, bersepatu, sopan.',
+          time: '08.00 - 12.00 WIB',
+          date: 'Sabtu, 19 Mei 2018',
+          location: 'Semarang Digital Kreatif',
+          now: false
+        },
+        {
+          id: 2,
+          title: 'Idea Summit',
+          image: 'idea_summit.png',
+          dresscode: 'Bebas, rapi, bersepatu, sopan.',
+          time: '14.00 - 16.00 WIB',
+          date: 'Sabtu, 19 Mei 2018',
+          location: 'Rumah Sasongko',
+          now: true
+        },
+        {
+          id: 3,
+          title: 'Pre-event',
+          image: 'pre_event_new.png',
+          dresscode: 'Bebas, rapi, bersepatu, sopan.',
+          time: '08.00 - 12.00 WIB',
+          date: 'Sabtu, 19 Mei 2018',
+          location: 'Semarang Digital Kreatif',
+          now: false
+        },
+        {
+          id: 4,
+          title: 'Idea Summit',
+          image: 'idea_summit.png',
+          dresscode: 'Bebas, rapi, bersepatu, sopan.',
+          time: '14.00 - 16.00 WIB',
+          date: 'Sabtu, 19 Mei 2018',
+          location: 'Rumah Sasongko',
+          now: false
+        },
+        {
+          id: 5,
+          title: 'Pre-event',
+          image: 'pre_event_new.png',
+          dresscode: 'Bebas, rapi, bersepatu, sopan.',
+          time: '08.00 - 12.00 WIB',
+          date: 'Sabtu, 19 Mei 2018',
+          location: 'Semarang Digital Kreatif',
+          now: false
+        },
+        {
+          id: 6,
+          title: 'Idea Summit',
+          image: 'idea_summit.png',
+          dresscode: 'Bebas, rapi, bersepatu, sopan.',
+          time: '14.00 - 16.00 WIB',
+          date: 'Sabtu, 19 Mei 2018',
+          location: 'Rumah Sasongko',
+          now: false
+        },
+      ]
+    }
+  },
+  methods: {
+    getPicture (path) {
+      return commons.getPicture(path)
+    }
+  },
+  mounted () {
+    this.$store.commit('setHeaderTitle', 'Event')
+    this.$store.commit('setActiveNavigation', 'event')
+    this.$nextTick(() => {
+      var selected = document.getElementById('tl-0')
+      console.log(selected)
+      document.location.hash = selected.id
+    })
+  }
+}
+</script>
+
+<style>
+  .timeline-item .detail {
+    padding: 8px;
+    border: none !important;
+  }
+
+  .timeline {
+    margin-right: 10px;
+  }
+
+  .d-flex > img {
+    flex: 0 !important;
+  }
+  
+  .now {
+    background-color: #FFB74D;
+    padding: 4px;
+    font-size: 10px;
+    border-radius: 4px;
+  }
+
+  .bullet::before {
+    position: absolute;
+    font-family: "Material Icons";
+    margin-left: -1.3em;
+    margin-top: 0;
+    font-size: 15px;
+  }
+
+  .bullet.dresscode::before {
+    content: "wc";
+  }
+  .bullet.time::before {
+    content: "access_time";
+  }
+  .bullet.date::before {
+    content: "event";
+  }
+  .bullet.location::before {
+    content: "location_on";
+  }
+</style>
