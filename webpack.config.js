@@ -1,13 +1,18 @@
 var path = require('path')
 var webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    swRegistration: './src/sw-register.js',
+    main: './src/main.js'
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
-    filename: 'build.[hash].js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -29,13 +34,13 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        include: [path.resolve(__dirname, 'src')]
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]?[hash]'
+          name: 'images/[name].[ext]'
         }
       }
     ]
@@ -44,7 +49,20 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/index.html'
-    })
+    }),
+    new CopyWebpackPlugin([
+      { from: 'static' },
+      { from: './src/.htaccess', to: './'}
+      // { from: './src/manifest.json', to: './'}
+    ]),
+    new ServiceWorkerWebpackPlugin({
+      entry: path.resolve(__dirname, 'src/service-worker.js')
+    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: "commons",
+    //   filename: "commons.[hash].js",
+    // })
+
   ],
   resolve: {
     alias: {

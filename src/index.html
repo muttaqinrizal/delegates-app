@@ -47,13 +47,21 @@
         right: 0;
         bottom: 0;
         left: 50%;
-        margin: -15px 0 -15px;
+        margin: -15px;
       }
     </style>
   </head>
   <body>
-    <div class="loading-spinner" id="first-loader"></div>
+    <!-- <div class="loading-spinner" id="first-loader"></div> -->
+    <noscript>Please enable Js in your browser</noscript>
     <div id="app">
     </div>
+    <script>
+      var spinner = document.createElement('div')
+      spinner.className = "loading-spinner"
+      spinner.id = "first-loader"
+      var body = document.getElementsByTagName('body')[0]
+      body.appendChild(spinner)
+    </script>
   </body>
 </html>

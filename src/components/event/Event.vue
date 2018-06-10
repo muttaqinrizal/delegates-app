@@ -3,11 +3,10 @@
     fluid
     style="min-height: 0;"
     grid-list-lg>
-    <v-card height="25px" flat color="transparent" id="tl-0"></v-card>
     <v-layout row wrap>
       <template>
         <timeline id="tl" ref="tl" timeline-theme="#ffbb00">
-          <div v-for="item in items" :key="item.title" :id="item.title">
+          <div v-for="item in items" :key="item.id" :id="'tll' + item.id">
             <timeline-item color="#ffbb00" line-color="#ffffff">
               <v-card :id="'tl-' + item.id">
                 <div class="detail">
@@ -18,7 +17,7 @@
                     <v-flex xs9>
                       <div style="padding-left: 10px;">
                         <div style="text-align: left; margin-bottom: 8px;">
-                          <strong>{{ item.title }}</strong>
+                          <strong>{{ item.title }} {{item.id}}</strong>
                           <span class="now" v-if="item.now">Sekarang</span>
                         </div>
                         <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
@@ -70,7 +69,7 @@ export default {
         },
         {
           id: 2,
-          title: 'Idea Summit',
+          title: 'Idea Summit dadakan',
           image: 'idea_summit.png',
           dresscode: 'Bebas, rapi, bersepatu, sopan.',
           time: '14.00 - 16.00 WIB',
@@ -130,9 +129,10 @@ export default {
     this.$store.commit('setHeaderTitle', 'Event')
     this.$store.commit('setActiveNavigation', 'event')
     this.$nextTick(() => {
-      var selected = document.getElementById('tl-0')
-      console.log(selected)
-      document.location.hash = selected.id
+      // var selected = document.getElementById('tl-0')
+      // console.log(selected)
+      // document.location.hash = selected.id
+      this.$vuetify.goTo('#tll2')
     })
   }
 }
