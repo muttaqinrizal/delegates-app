@@ -52,8 +52,8 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: 'static' },
-      { from: './src/.htaccess', to: './'}
-      // { from: './src/manifest.json', to: './'}
+      { from: './src/.htaccess', to: './'},
+      { from: './src/manifest.json', to: './'}
     ]),
     new ServiceWorkerWebpackPlugin({
       entry: path.resolve(__dirname, 'src/service-worker.js')
