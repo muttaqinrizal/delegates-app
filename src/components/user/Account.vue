@@ -29,7 +29,7 @@ export default {
 
   },
   mounted: function(){
-    this.$store.commit('setHeaderTitle', 'Account')
+    // this.$store.commit('setHeaderTitle', 'Account')
     this.$store.commit('setActiveNavigation', 'account')
   },
 }

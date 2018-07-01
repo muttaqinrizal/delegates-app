@@ -9,7 +9,7 @@
   <!-- <v-container> -->
     <slot name="main-content"></slot>
   <!-- </v-container> -->
-  <v-bottom-nav :value="true" :active.sync="activeNavigation" fixed color="white" height="50">
+  <v-bottom-nav :value="showNavbar" :active.sync="activeNavigation" fixed color="white" height="50">
     <v-btn v-for="(nav, key) in navs" :key="key"  flat color="blue lighten-1" :value="key">
       <v-icon>{{ nav.icon }}</v-icon>
     </v-btn>
@@ -69,6 +69,9 @@ export default {
       get: function () {
         return this.$store.state.activeNavigation
       }
+    },
+    showNavbar: function () {
+      return this.$store.state.showNavbar
     }
   },
   methods: {

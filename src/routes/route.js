@@ -9,6 +9,7 @@ import Router from 'vue-router'
 const Home = () => import(/* webpackChunkName: "home" */ '../components/home/Home.vue')
 const Account = () => import(/* webpackChunkName: "account" */ '../components/user/Account.vue');
 const Event = () => import(/* webpackChunkName: "event" */ '../components/event/Event.vue');
+const Announcement = () => import(/* webpackChunkName: "event" */ '../components/announcement/Default.vue');
 Vue.use(Router)
 
 export default new Router({
@@ -16,6 +17,7 @@ export default new Router({
     { path: '/', name: 'Home', component: Home },
     { path: '/account', name: 'Account', component: Account },
     { path: '/event', name: 'Event', component: Event },
+    { path: '/announcement', name: 'Announcement', component: Announcement },
   ],
   mode: 'history',
   scrollBehavior (to, from, savedPosition) {

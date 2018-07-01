@@ -6,7 +6,7 @@
     :navs="navs"
     >
       <div slot="right-icon">
-        <router-link to="/account">
+        <router-link to="/announcement">
           <v-btn icon>
             <v-badge overlap color="orange">
               <v-icon v-if="hasNotif" slot="badge" small>more_horiz</v-icon>

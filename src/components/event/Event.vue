@@ -6,7 +6,7 @@
     <v-layout row wrap>
       <template>
         <timeline id="tl" ref="tl" timeline-theme="#ffbb00">
-          <div v-for="item in items" :key="item.id" :id="'tll' + item.id">
+          <div v-for="item in eventData" :key="item._id" :id="'tll' + item._id">
             <timeline-item color="#ffbb00" line-color="#ffffff">
               <v-card :id="'tl-' + item.id">
                 <div class="detail">
@@ -17,17 +17,17 @@
                     <v-flex xs9>
                       <div style="padding-left: 10px;">
                         <div style="text-align: left; margin-bottom: 8px;">
-                          <strong>{{ item.title }} {{item.id}}</strong>
+                          <strong>{{ item.title }}</strong>
                           <span class="now" v-if="item.now">Sekarang</span>
                         </div>
                         <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
                           {{ item.dresscode }}
                         </div>
                         <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                          {{ item.time }}
+                          {{ item.time.start }} - {{ item.time.end }} WIB
                         </div>
                         <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                          {{ item.date }}
+                          {{ item.date || '-'}}
                         </div>
                         <div class="bullet location" style="text-align: left;">
                           {{ item.location }}
@@ -47,6 +47,8 @@
 <script>
 import { Timeline, TimelineItem, TimelineTitle } from 'vue-cute-timeline'
 import commons from '../../libs/commons'
+import axios from 'axios'
+import localForage from 'localforage'
 export default {
   name: 'dashboard',
   components: {
@@ -56,6 +58,7 @@ export default {
   },
   data () {
     return {
+      eventData: [],
       items: [
         {
           id: 1,
@@ -120,19 +123,45 @@ export default {
       ]
     }
   },
+  computed: {
+    events() {
+      
+    }
+  },
   methods: {
-    getPicture (path) {
-      return commons.getPicture(path)
+    getPicture (name) {
+      return `http://localhost:3000/images/${name}`
+    },
+    loadEventData () {
+      axios.get('http://localhost:3000/api/event')
+      .then(response => {
+        console.log('from network', response.data);
+        
+        localForage.setItem('events', JSON.stringify(response.data))
+        this.eventData = response.data
+      })
+      .catch(err => {
+        localForage.getItem('events')
+        .then(events => {
+          console.log('from localforage');
+          
+          this.eventData = JSON.parse(events)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      })
     }
   },
   mounted () {
-    this.$store.commit('setHeaderTitle', 'Event')
+    // this.$store.commit('setHeaderTitle', 'Event')
+    this.loadEventData()
     this.$store.commit('setActiveNavigation', 'event')
     this.$nextTick(() => {
       // var selected = document.getElementById('tl-0')
       // console.log(selected)
       // document.location.hash = selected.id
-      this.$vuetify.goTo('#tll2')
+      // this.$vuetify.goTo('#tll2')
     })
   }
 }
@@ -142,6 +171,10 @@ export default {
   .timeline-item .detail {
     padding: 8px;
     border: none !important;
+  }
+
+  .timeline-item {
+    min-width: 300px;
   }
 
   .timeline {

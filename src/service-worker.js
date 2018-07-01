@@ -6,6 +6,7 @@ let assetsToCache = serviceWorkerOption.assets
 
 function precache() {
   return caches.open(CACHE).then(function (cache) {
+    assetsToCache.push('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons')
     console.log(assetsToCache)
     return cache.addAll(assetsToCache);
   });
@@ -35,10 +36,18 @@ self.addEventListener('fetch', function (evt) {
 
 
 function fromNetwork(request, timeout) {
+  console.log('serving from network: ', request.clone().url)
   return new Promise(function (fulfill, reject) {
     // var timeoutId = setTimeout(reject, timeout);
     fetch(request).then(function (response) {
       // clearTimeout(timeoutId);
+      caches.open(CACHE).then(function (cache) {
+        // cache.put(request, response.clone())
+        cache.add(request)
+        .then(t => {
+          console.log('caching...');
+        })
+      })
       fulfill(response);
     }, reject);
   });
