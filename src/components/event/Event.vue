@@ -133,7 +133,7 @@ export default {
       return `http://localhost:3000/images/${name}`
     },
     loadEventData () {
-      axios.get('http://localhost:3000/api/event')
+      axios.get('/b/api/event')
       .then(response => {
         console.log('from network', response.data);
         
