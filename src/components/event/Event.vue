@@ -3,9 +3,10 @@
     fluid
     style="min-height: 0;"
     grid-list-lg>
+    <div class="card" v-if="offline">Offline mode</div>
     <v-layout row wrap>
       <template>
-        <timeline id="tl" ref="tl" timeline-theme="#ffbb00">
+        <timeline id="tl" ref="tl" timeline-theme="#ffbb00" v-if="!isLoading">
           <div v-for="item in eventData" :key="item._id" :id="'tll' + item._id">
             <timeline-item color="#ffbb00" line-color="#ffffff">
               <v-card :id="'tl-' + item.id">
@@ -40,6 +41,12 @@
             </timeline-item>
           </div>
         </timeline>
+        <div v-if="isLoading">
+          Loading...
+        </div>
+        <div v-if="loadingFailed">
+          Offline
+        </div>
       </template>
     </v-layout>
   </v-container>
@@ -59,6 +66,9 @@ export default {
   data () {
     return {
       eventData: [],
+      offline: false,
+      loadingFailed: false,
+      isLoading: true,
       items: [
         {
           id: 1,
@@ -130,25 +140,34 @@ export default {
   },
   methods: {
     getPicture (name) {
-      return `http://localhost:3000/images/${name}`
+      return `http://localhost:3000/api/static/images/${name}`
     },
     loadEventData () {
-      axios.get('/b/api/event')
+      axios.get('http://localhost:3000/api/event')
       .then(response => {
         console.log('from network', response.data);
         
         localForage.setItem('events', JSON.stringify(response.data))
         this.eventData = response.data
+        this.isLoading = false
       })
       .catch(err => {
         localForage.getItem('events')
         .then(events => {
-          console.log('from localforage');
-          
-          this.eventData = JSON.parse(events)
+          console.log('from localforage', events);
+          if (events) {
+            this.eventData = JSON.parse(events)
+            this.offline = true
+          }
+          else {
+            this.loadingFailed = true
+          }
+          this.isLoading = false
         })
         .catch(err => {
           console.log(err)
+          this.loadingFailed = true
+          this.isLoading = false
         })
       })
     }
