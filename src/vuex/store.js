@@ -15,7 +15,8 @@ export default new Vuex.Store({
       account: { icon: 'account_circle', title: 'Akun', path: '/account' }
     },
     hasNotif: true,
-    showNavbar: true
+    showNavbar: true,
+    showBackBtn: false,
   },
   mutations: {
     setHeaderTitle (state, newTitle) {
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     },
     setShowNavbar (state, show) {
       state.showNavbar = show
+    },
+    setShowBackBtn (state, show) {
+      state.showBackBtn = show
     }
   }
 })

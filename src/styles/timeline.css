@@ -1,0 +1,45 @@
+.timeline-item .detail {
+    padding: 8px;
+    border: none !important;
+  }
+
+  .timeline-item {
+    min-width: 300px;
+    cursor: pointer;
+  }
+
+  .timeline {
+    margin-right: 10px;
+  }
+
+  .d-flex > img {
+    flex: 0 !important;
+  }
+  
+  .now {
+    background-color: #FFB74D;
+    padding: 4px;
+    font-size: 10px;
+    border-radius: 4px;
+  }
+
+  .bullet::before {
+    position: absolute;
+    font-family: "Material Icons";
+    margin-left: -1.3em;
+    margin-top: 0;
+    font-size: 15px;
+  }
+
+  .bullet.dresscode::before {
+    content: "wc";
+  }
+  .bullet.time::before {
+    content: "access_time";
+  }
+  .bullet.date::before {
+    content: "event";
+  }
+  .bullet.location::before {
+    content: "location_on";
+  }

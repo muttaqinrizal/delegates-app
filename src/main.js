@@ -6,6 +6,11 @@ import Vuex from 'vuex'
 import App from './App.vue'
 import router from './routes/route'
 import store from './vuex/store'
+import settingDev from './config.dev.js'
+import settingProd from './config.js'
+console.log(process.env.NODE_ENV);
+
+var setting = process.env.NODE_ENV === 'development' ? settingDev : settingProd
 
 import 'vuetify/dist/vuetify.min.css'
 
@@ -13,7 +18,7 @@ var loading = document.getElementById('first-loader')
 if(loading) {
   loading.remove()
 }
-
+Vue.prototype.$config = setting
 Vue.use(Vuetify, VueRouter, Vuex)
 
 new Vue({

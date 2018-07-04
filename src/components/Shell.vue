@@ -2,7 +2,12 @@
 <v-app>
   <v-toolbar dark color="blue lighten-1" :fixed="true">
     <!-- <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon> -->
-    <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+    <v-toolbar-title class="white--text">
+      <v-btn depressed color="primary" @click="previousPage()" v-if="$store.state.showBackBtn">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+      {{ title }}
+    </v-toolbar-title>
     <v-spacer></v-spacer>
     <slot name="right-icon"></slot>
   </v-toolbar>
@@ -76,7 +81,10 @@ export default {
   },
   methods: {
     navLinkClicked (newPath) {
-      this.$router.push({path: newPath})
+      this.$router.replace({path: newPath})
+    },
+    previousPage() {
+      this.$router.replace({path: '/'})
     }
   }
 }
