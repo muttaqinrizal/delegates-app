@@ -152,7 +152,7 @@ export default {
   },
   methods: {
     getPicture (name) {
-      return `http://localhost:3000/api/static/images/${name}`
+      return `${this.$config.apiBaseUrl}/api/static/images/${name}`
     }
   },
   mounted () {
