@@ -1,9 +1,12 @@
 // const { assets } = global.serviceWorkerOption
-const CACHE = 'flsguide-cache-v8.2'
+const CACHE = 'flsguide-cache-v8.3.0'
+const strategies = {
+  NETWORK_FALLING_BACK_TO_CACHE: 1,
+  CACHE_FALLING_BACK_TO_NETWORK: 2,
+  NETWORK_ONLY: 3,
+}
 
-// let assetsToCache = [...assets, './']
 let assetsToCache = [...serviceWorkerOption.assets, '/', '/event']
-// assetsToCache.push('/')
 console.log(assetsToCache);
 
 
@@ -28,7 +31,6 @@ self.addEventListener('activate', function (event) {
       }))
     })
   )
-  // return self.clients.claim();
 });
 
 self.addEventListener('fetch', function (evt) {
@@ -41,12 +43,20 @@ self.addEventListener('fetch', function (evt) {
   // }
   // else {
     // console.log('request to', evt.request.url);
-    evt.respondWith(fromNetwork(evt.request, 1000).catch(function () {
+    evt.respondWith(fromNetwork(evt.request, 5000).catch(function () {
       return fromCache(evt.request);
     }));
   // }
 });
 
+self.addEventListener('push', function (event) {
+  const payload = event.data ? event.data.text() : 'no payload';
+  event.waitUntil(
+    self.registration.showNotification('FLS Guide', {
+      body: payload,
+    })
+  )
+})
 
 function precache() {
   return caches.open(CACHE).then(function (cache) {
@@ -78,4 +88,36 @@ function update(request) {
       return cache.put(request, response);
     });
   });
+}
+
+function whichStrategies (event) {
+  const FRONTEND = /https\:\/\/fls\.nurulirfan\.com/
+  const API_ASSETS = /\/api\/assets\//
+  const CONTENT = /\/api\/((?!assets))/
+
+  var request = event.request
+  var url = new URL(request.url)
+  var origins = [
+    'https://apifls.nurulirfan.com',
+    'http://localhost:8080',
+    'http://localhost:3000',
+    self.location.origin,
+  ]
+
+  var isGET = request.method === 'GET'
+  var isOriginAllowed = origins.indexOf(url.origin) >= 0
+  
+  if(isGET && isOriginAllowed) {
+    if (FRONTEND.test(url.href)) {
+      return strategies.CACHE_FALLING_BACK_TO_NETWORK
+    }
+    else if (API_ASSETS.test(pattern) || CONTENT.test(pattern)) { // use network first
+      return strategies.NETWORK_FALLING_BACK_TO_CACHE
+    }
+    // else if (CONTENT.test(pattern)) {
+    //   return ''
+    // }
+  } else {
+    return strategies.NETWORK_ONLY
+  }
 }

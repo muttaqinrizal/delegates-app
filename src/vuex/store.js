@@ -11,7 +11,7 @@ export default new Vuex.Store({
       home: { icon: 'home', title: 'FLS Guide', path: '/' },
       event: { icon: 'event', title: 'Acara', path: '/event' },
       vote: { icon: 'how_to_vote', title: 'Voting', path: '/vote' },
-      merchandise: { icon: 'shopping_cart', title: 'Merchandise', path: '/merchandise' },
+      // merchandise: { icon: 'shopping_cart', title: 'Merchandise', path: '/merchandise' },
       account: { icon: 'account_circle', title: 'Akun', path: '/account' }
     },
     hasNotif: true,

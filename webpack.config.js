@@ -7,7 +7,8 @@ const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 module.exports = {
   entry: {
     swRegistration: './src/sw-register.js',
-    main: './src/main.js'
+    main: './src/main.js',
+    'babel-polyfill': 'babel-polyfill'
   },
   output: {
     path: path.resolve(__dirname, './dist'),
