@@ -1,5 +1,5 @@
 // const { assets } = global.serviceWorkerOption
-const CACHE = 'flsguide-cache-v0.12'
+const CACHE = 'flsguide-cache-v0.13'
 const strategies = {
   NETWORK_FALLING_BACK_TO_CACHE: 'net2cache',
   CACHE_FALLING_BACK_TO_NETWORK: 'cache2net',
