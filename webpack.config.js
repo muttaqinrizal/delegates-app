@@ -59,6 +59,11 @@ module.exports = {
     new ServiceWorkerWebpackPlugin({
       entry: path.resolve(__dirname, 'src/service-worker.js')
     }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"development"'
+      }
+    })
     // new webpack.optimize.CommonsChunkPlugin({
     //   name: "commons",
     //   filename: "commons.[hash].js",

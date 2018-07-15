@@ -3,7 +3,7 @@
     fluid
     style="min-height: 0;"
     grid-list-lg>
-    <div class="card" v-if="offline">Offline mode</div>
+    <div class="card" v-if="!isOnline">Offline mode</div>
     <v-layout row wrap>
       <template>
         <timeline id="tl" ref="tl" timeline-theme="#ffbb00" v-if="!isLoading">
@@ -88,6 +88,9 @@ export default {
     }
   },
   computed: {
+    isOnline () {
+      return navigator.onLine
+    },
     events() {
       
     }
@@ -108,28 +111,15 @@ export default {
       axios.get(`${this.$config.apiBaseUrl}/api/event`)
       .then(response => {
         console.log('from network', response.data);
-        localForage.setItem('events', JSON.stringify(response.data))
         this.eventData = response.data
         this.isLoading = false
       })
       .catch(err => {
-        localForage.getItem('events')
-        .then(events => {
-          console.log('from localforage', events);
-          if (events) {
-            this.eventData = JSON.parse(events)
-            this.offline = true
-          }
-          else {
-            this.loadingFailed = true
-          }
-          this.isLoading = false
-        })
-        .catch(err => {
-          console.log(err)
-          this.loadingFailed = true
-          this.isLoading = false
-        })
+        this.isLoading = false
+        this.loadingFailed = true
+        this.offline = true
+        console.log(err);
+        
       })
     }
   },

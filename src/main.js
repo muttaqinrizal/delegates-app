@@ -6,12 +6,11 @@ import Vuex from 'vuex'
 import App from './App.vue'
 import router from './routes/route'
 import store from './vuex/store'
-import settingDev from './config.dev.js'
-import settingProd from './config.js'
-
-var setting = settingProd
-
 import 'vuetify/dist/vuetify.min.css'
+import config from './config'
+
+var setting = config.development
+if (process.env.NODE_ENV === 'production') setting = config.production
 
 var loading = document.getElementById('first-loader')
 if(loading) {

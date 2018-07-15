@@ -1,10 +1,9 @@
-// import runtime from 'serviceworker-webpack-plugin/lib/runtime';
+import config from './config'
 
-// if ('serviceWorker' in navigator) {
-//   console.log('service worker is supported')
-//   var serviceWorker = runtime.register()
-// }
+var setting = config.development
+if (process.env.NODE_ENV === 'production') setting = config.production
 
+// TODO: explain me!
 function urlBase64ToUint8Array(base64String) {
   var padding = '='.repeat((4 - base64String.length % 4) % 4);
   var base64 = (base64String + padding)
@@ -48,18 +47,17 @@ if ('serviceWorker' in navigator) {
     console.log('error')
   });
 
-  Notification.requestPermission(permission => {
-    if(permission === 'granted') {
-      console.log('notification permission granted')
-    }
-  })
+  // Notification.requestPermission(permission => {
+  //   if(permission === 'granted') {
+  //     console.log('notification permission granted')
+  //   }
+  // })
   navigator.serviceWorker.ready.then((registration) => {
-    
     return registration.pushManager.getSubscription()
     .then(async function(subscription) {
       console.log(subscription);
       if (subscription) return subscription
-      const response = await fetch('http://localhost:3000/api/subs/vapidPublicKey')
+      const response = await fetch(`${setting.apiBaseUrl}/api/subs/vapidPublicKey`)
       const vapidPublicKey = await response.text()
       const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey)
       return registration.pushManager.subscribe({
@@ -69,7 +67,7 @@ if ('serviceWorker' in navigator) {
     })
   })
   .then(subscription => {
-    fetch('http://localhost:3000/api/subs/register', {
+    fetch(`${setting.apiBaseUrl}/api/subs/register`, {
       method: 'post',
       headers: {
         'Content-type': 'application/json'
