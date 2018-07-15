@@ -90,7 +90,8 @@ if (process.env.NODE_ENV === 'production') {
       'process.env': {
         NODE_ENV: '"production"'
       },
-      'ENVIRONMENT': '"production"'
+      'ENVIRONMENT': '"production"',
+      'BUILDSTAMP': new Date().getTime()
     }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
@@ -109,7 +110,8 @@ else {
       'process.env': {
         NODE_ENV: '"development"'
       },
-      'ENVIRONMENT': '"development"'
+      'ENVIRONMENT': '"development"',
+      'BUILDSTAMP': new Date().getTime()
     })
   ])
 }
