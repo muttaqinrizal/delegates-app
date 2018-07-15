@@ -10,7 +10,7 @@ import 'vuetify/dist/vuetify.min.css'
 import config from './config'
 
 var setting = config.development
-if (process.env.NODE_ENV === 'production') setting = config.production
+if (ENVIRONMENT === 'production') setting = config.production
 
 var loading = document.getElementById('first-loader')
 if(loading) {

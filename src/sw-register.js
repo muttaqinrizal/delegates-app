@@ -1,7 +1,7 @@
 import config from './config'
 
 var setting = config.development
-if (process.env.NODE_ENV === 'production') setting = config.production
+if (ENVIRONMENT === 'production') setting = config.production
 
 // TODO: explain me!
 function urlBase64ToUint8Array(base64String) {
