@@ -46,37 +46,6 @@ if ('serviceWorker' in navigator) {
     // might be unavailable or contain a syntax error.
     console.log('error')
   });
-
-  // Notification.requestPermission(permission => {
-  //   if(permission === 'granted') {
-  //     console.log('notification permission granted')
-  //   }
-  // })
-  navigator.serviceWorker.ready.then((registration) => {
-    return registration.pushManager.getSubscription()
-    .then(async function(subscription) {
-      console.log(subscription);
-      if (subscription) return subscription
-      const response = await fetch(`${setting.apiBaseUrl}/api/subs/vapidPublicKey`)
-      const vapidPublicKey = await response.text()
-      const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey)
-      return registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: convertedVapidPublicKey
-      })
-    })
-  })
-  .then(subscription => {
-    fetch(`${setting.apiBaseUrl}/api/subs/register`, {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        subscription: subscription
-      })
-    })
-  })
 } else {
   // The current browser doesn't support service workers.
   console.log('not supported')

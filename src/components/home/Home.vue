@@ -85,6 +85,7 @@
 </template>
 <script>
 import '../../styles/timeline.css'
+import common from '../../libs/commons'
 export default {
   name: 'dashboard',
   data () {
@@ -100,6 +101,9 @@ export default {
     subscribe() {
       Notification.requestPermission().then(permission => {
         this.subscription = permission
+        if (permission === 'granted') {
+          common.pushSubscribe(this.$config)
+        }
       })
     }
   },
