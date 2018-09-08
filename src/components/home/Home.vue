@@ -18,7 +18,7 @@
           <v-container fluid grid-list-lg>
             <v-layout row>
               <v-flex xs4 sm2 md2 lg2>
-                <img :src="getPicture('pembukaan.png')" style="height: 90px;">
+                <img :src="getApiPicture('pembukaan.png')" style="height: 90px;">
               </v-flex>
               <v-flex xs8>
                 <h3 class="text-md-left text-sm-left text-xs-left">Sekarang</h3>
@@ -49,7 +49,7 @@
           <v-container fluid grid-list-lg>
             <v-layout row>
               <v-flex xs4 sm2 md2 lg2>
-                <img :src="getPicture('pembukaan.png')" style="height: 90px;">
+                <img :src="getApiPicture('pembukaan.png')" style="height: 90px;">
               </v-flex>
               <v-flex xs8>
                 <h3 class="text-md-left text-sm-left text-xs-left">Berikutnya</h3>
@@ -95,16 +95,19 @@ export default {
     }
   },
   methods: {
-    getPicture (name) {
+    getApiPicture (name) {
       return `${this.$config.apiBaseUrl}/api/static/images/${name}`
     },
     subscribe() {
       Notification.requestPermission().then(permission => {
         this.subscription = permission
         if (permission === 'granted') {
-          common.pushSubscribe(this.$config)
+          console.log('granted');
+          
+          common.pushSubscribe()
         }
       })
+      console.log('regsss');
     }
   },
   mounted () {

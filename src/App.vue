@@ -6,10 +6,11 @@
     :navs="navs"
     >
       <div slot="right-icon">
-        <router-link to="/announcement">
+        <router-link to="/announcement" v-if="$route.path !== '/login'">
           <v-btn icon>
-            <v-badge overlap color="orange">
-              <v-icon v-if="hasNotif" slot="badge" small>more_horiz</v-icon>
+            <v-badge overlap color="orange" v-model="showNotifBadge">
+              <v-icon v-if="hasNotif > 10" slot="badge" small>more_horiz</v-icon>
+              <span v-else slot="badge">{{hasNotif}}</span>
               <v-icon>notifications</v-icon>
             </v-badge>
           </v-btn>
@@ -23,6 +24,7 @@
 
 <script>
 import Shell from './components/Shell.vue'
+// import localForage from 'localforage'
 
 export default {
   name: 'app',
@@ -42,6 +44,8 @@ export default {
         image: 'http://www.gravatar.com/avatar/43ba74cbabc484e6303b935115291c22?d=mm&s=35',
         fullname: 'Nurul Irfan'
       },
+      userId: '',
+      userPass: '',
       // navs: [
       //   {name: 'home', icon: 'home', title: 'FLS Guide', path: '/'},
       //   {name: 'event', icon: 'event', title: 'Acara', path: '/event'},
@@ -50,6 +54,9 @@ export default {
     }
   },
   computed: {
+    // isLoggedIn () {
+    //   return this.$store.state.isLoggedIn
+    // },
     headerTitle () {
       return this.$store.state.headerTitle
     },
@@ -58,7 +65,15 @@ export default {
     },
     hasNotif () {
       return this.$store.state.hasNotif
-    }
+    },
+    showNotifBadge () {
+      return this.hasNotif != 0
+    } 
+  },
+  created () {
+  },
+  methods: {
+    
   }
 }
 </script>

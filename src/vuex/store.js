@@ -14,9 +14,10 @@ export default new Vuex.Store({
       // merchandise: { icon: 'shopping_cart', title: 'Merchandise', path: '/merchandise' },
       account: { icon: 'account_circle', title: 'Akun', path: '/account' }
     },
-    hasNotif: true,
+    hasNotif: 0,
     showNavbar: true,
     showBackBtn: false,
+    isLoggedIn: false,
   },
   mutations: {
     setHeaderTitle (state, newTitle) {
@@ -26,14 +27,17 @@ export default new Vuex.Store({
       state.activeNavigation = newPage
       state.headerTitle = state.navigations[newPage].title
     },
-    setHasNotif (state, has) {
-      state.hasNotif = has
+    setHasNotif (state, count) {
+      state.hasNotif = count
     },
     setShowNavbar (state, show) {
       state.showNavbar = show
     },
     setShowBackBtn (state, show) {
       state.showBackBtn = show
+    },
+    setIsLoggedIn (state, loggedIn) {
+      state.isLoggedIn = loggedIn
     }
   }
 })

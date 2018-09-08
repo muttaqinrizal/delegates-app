@@ -1,11 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import authMid from '../middlewares/auth'
 
-// import Foo from '../components/Foo.vue'
-// import Dosen from '../components/Dosen.vue'
-// const Account = () => import(/* webpackChunkName: "account" */ '../components/user/Account.vue');
-// import Home from '../components/home/Home.vue'
-// import Account from '../components/user/Account.vue'
+const Login = () => import(/* webpackChunkName: "login" */ '../components/user/Login.vue');
 const Home = () => import(/* webpackChunkName: "home" */ '../components/home/Home.vue')
 const Account = () => import(/* webpackChunkName: "account" */ '../components/user/Account.vue');
 const Event = () => import(/* webpackChunkName: "event" */ '../components/event/Event.vue');
@@ -14,10 +11,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/', name: 'Home', component: Home },
-    { path: '/account', name: 'Account', component: Account },
-    { path: '/event', name: 'Event', component: Event },
-    { path: '/announcement', name: 'Announcement', component: Announcement },
+    { path: '/', name: 'Home', beforeEnter: authMid.requireAuth, component: Home },
+    { path: '/login', name: 'Login', beforeEnter: authMid.requireNotAuth, component: Login },
+    { path: '/account', name: 'Account', beforeEnter: authMid.requireAuth, component: Account },
+    { path: '/event', name: 'Event', beforeEnter: authMid.requireAuth, component: Event },
+    { path: '/announcement', name: 'Announcement', beforeEnter: authMid.requireAuth, component: Announcement },
   ],
   mode: 'history',
   scrollBehavior (to, from, savedPosition) {

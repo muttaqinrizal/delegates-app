@@ -102,12 +102,23 @@ function netOnly (event) {
 }
 
 self.addEventListener('push', function (event) {
-  const payload = event.data ? event.data.text() : 'no payload';
+  const payload = event.data ? event.data.json() : 'tests';
   event.waitUntil(
-    self.registration.showNotification('FLS Guide', {
-      body: payload,
+    self.registration.showNotification(payload.title, {
+      icon: 'images/logo.png',
+      body: payload.content,
+      data: payload
     })
   )
+})
+
+self.addEventListener('notificationclick', function (event) {
+  console.log('notif clicked');
+  if (Notification.prototype.hasOwnProperty('data')) {
+    console.log('using data');
+    var url = event.notification.data.url
+    event.waitUntil(clients.openWindow(url))
+  }
 })
 
 function precache() {

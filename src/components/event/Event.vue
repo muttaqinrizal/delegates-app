@@ -13,7 +13,7 @@
                 <div class="detail" @click="openDetail(idx)">
                   <v-layout row wrap>
                     <v-flex d-flex xs3>
-                      <img :key="new Date().getTime()" :src="getPicture(item.image)" style="height: 90px; width: auto;">
+                      <img :key="new Date().getTime()" :src="getApiPicture(item.image)" style="height: 90px; width: auto;">
                     </v-flex>
                     <v-flex xs9>
                       <div style="padding-left: 10px;">
@@ -66,7 +66,6 @@ import { Timeline, TimelineItem, TimelineTitle } from 'vue-cute-timeline'
 import commons from '../../libs/commons'
 import Detail from './EventDetail.vue'
 import axios from 'axios'
-import localForage from 'localforage'
 import '../../styles/timeline.css'
 export default {
   name: 'dashboard',
@@ -96,8 +95,8 @@ export default {
     }
   },
   methods: {
-    getPicture (name) {
-      return `${this.$config.apiBaseUrl}/api/static/images/${name}`
+    getApiPicture(path) {
+      return commons.getApiPicture(path)
     },
     openDetail (idx) {
       this.detailId = this.eventData[idx]._id
