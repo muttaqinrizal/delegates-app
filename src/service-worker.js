@@ -5,6 +5,7 @@ const strategies = {
   CACHE_FALLING_BACK_TO_NETWORK: 'cache2net',
   NETWORK_ONLY: 'netonly',
 }
+import localForage from 'localforage'
 
 let assetsToCache = [
   ...serviceWorkerOption.assets,
@@ -102,6 +103,17 @@ function netOnly (event) {
 }
 
 self.addEventListener('push', function (event) {
+  localForage.getItem('notif').then(item => {
+    if (item) item += 1
+    else item = 1
+    localForage.setItem('notif', item)
+  })
+  .catch(err => {
+    console.log('eror', err);
+    
+  })
+  console.log('new notif');
+  
   const payload = event.data ? event.data.json() : 'tests';
   event.waitUntil(
     self.registration.showNotification(payload.title, {

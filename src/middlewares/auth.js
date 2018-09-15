@@ -10,7 +10,7 @@ export default {
     console.log('token:', token);
     
     if (token) {
-      store.commit('setHasNotif', localStorage.getItem('notif'))
+      store.commit('setHasNotif', await localForage.getItem('notif'))
       axios.defaults.headers.common['Authorization'] = `bearer ${token}`
       next()
     }

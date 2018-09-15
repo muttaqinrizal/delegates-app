@@ -3,7 +3,7 @@
   <v-toolbar dark color="blue lighten-1" :fixed="true">
     <!-- <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon> -->
     <v-toolbar-title class="white--text">
-      <v-btn depressed color="primary" @click="previousPage()" v-if="$store.state.showBackBtn">
+      <v-btn icon @click="previousPage()" v-if="$store.state.showBackBtn">
         <v-icon>arrow_back</v-icon>
       </v-btn>
       {{ title }}
@@ -84,7 +84,7 @@ export default {
       this.$router.replace({path: newPath})
     },
     previousPage() {
-      this.$router.replace({path: '/'})
+      window.history.back()
     }
   }
 }
