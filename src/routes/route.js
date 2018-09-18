@@ -8,6 +8,7 @@ const Account = () => import(/* webpackChunkName: "account" */ '../components/us
 const Event = () => import(/* webpackChunkName: "event" */ '../components/event/Event.vue');
 const Announcement = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/Default.vue');
 const AnnouncementDetail = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/Detail.vue');
+const AnnouncementNew = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/New.vue');
 Vue.use(Router)
 
 export default new Router({
@@ -17,6 +18,7 @@ export default new Router({
     { path: '/account', name: 'Account', beforeEnter: authMid.requireAuth, component: Account },
     { path: '/event', name: 'Event', beforeEnter: authMid.requireAuth, component: Event },
     { path: '/announcement', name: 'Announcement', beforeEnter: authMid.requireAuth, component: Announcement },
+    { path: '/announcement/new', name: 'AnnouncementNew', beforeEnter: authMid.requireAuth, component: AnnouncementNew },
     { path: '/announcement/:id', name: 'AnnouncementDetail', beforeEnter: authMid.requireAuth, component: AnnouncementDetail },
   ],
   mode: 'history',

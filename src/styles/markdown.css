@@ -1,0 +1,22 @@
+.preview-md ul, .preview-md ul li{
+  list-style-type: disc;
+}
+.preview-md ul, ol {
+  padding-left: 16px;
+}
+.preview-md li{
+  display: list-item;
+}
+.preview-md p {
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.preview-md h1 {
+  font-size: 16px;
+  font-weight: bold;
+}
+.preview-md h2 {
+  font-size: 14px;
+  font-weight: bold;
+}

@@ -1,9 +1,34 @@
 <template>
-  <v-layout>
-    <v-card>
+  <v-layout fluid grid-list-lg>
+    <v-card flat>
       <v-btn @click="readAll" v-show="hasNotif">Tandai sudah dibaca semua</v-btn>
       <v-list two-line>
-        <template v-for="(item, index) in announcementData">
+        <template>
+          <v-list-tile
+            :key="'newAnnc'"
+            avatar
+            @click="$router.push('/announcement/new')"
+          >
+            <v-list-tile-avatar color="teal">
+              <v-icon color="white">add</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Buat Pengumuman</v-list-tile-title>
+              <v-list-tile-sub-title class="text--primary">Buat pengumuman dan kirim notifikasi ke delegates</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-divider/>
+        </template>
+        <v-divider/>
+        <v-subheader>Semua Pengumuman</v-subheader>
+        <template v-if="isLoading">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </template>
+        <template v-else v-for="(item, index) in announcementData">
           <v-list-tile
             :key="item._id"
             avatar
@@ -19,7 +44,6 @@
               <v-list-tile-sub-title v-html="item.content"></v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-divider/>
         </template>
       </v-list>
     </v-card>
@@ -35,7 +59,8 @@ export default {
   name: 'dashboard',
   data () {
     return {
-      announcementData: []
+      announcementData: [],
+      isLoading: true,
     }
   },
   methods: {
@@ -66,7 +91,7 @@ export default {
   },
   mounted () {
     this.$store.commit('setHeaderTitle', 'Pengumuman')
-    // this.$store.commit('setActiveNavigation', 'announcement')
+    // this.$store.commit('setActiveNavigation', 'a')
     this.loadAnnouncementData()
   }
 }

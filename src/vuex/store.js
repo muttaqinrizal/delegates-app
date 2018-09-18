@@ -18,6 +18,9 @@ export default new Vuex.Store({
     showNavbar: true,
     showBackBtn: false,
     isLoggedIn: false,
+    showSnackbar: false,
+    snackbarMessage: '',
+    snackbarType: '',
   },
   mutations: {
     setHeaderTitle (state, newTitle) {
@@ -38,6 +41,22 @@ export default new Vuex.Store({
     },
     setIsLoggedIn (state, loggedIn) {
       state.isLoggedIn = loggedIn
+    },
+    setShowSnackbar(state, show) {
+      state.showSnackbar = show
+    },
+    setSnackbarMessage(state, message) {
+      state.snackbarMessage = message
+    },
+    setSnackbarType(state, newType) {
+      state.snackbarType = newType
+    }
+  },
+  actions: {
+    notify({commit}, data) {
+      commit('setShowSnackbar', true)
+      commit('setSnackbarMessage', data.message)
+      commit('setSnackbarType', data.type)
     }
   }
 })
