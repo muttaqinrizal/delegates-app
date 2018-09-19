@@ -141,7 +141,7 @@ function precache() {
 
 function whichStrategies (event) {
   const FRONTEND = /(https\:\/\/fls\.nurulirfan\.com)|(http:\/\/localhost:8080)/
-  const API_ASSETS = /\/api\/static\//
+  const API_ASSETS = /(?=.*\/api\/static\/)(?!.*hires).*/
   const CONTENT = /\/api\/((?!static))/
 
   var request = event.request.clone()

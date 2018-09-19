@@ -1,6 +1,6 @@
 <template>
   <v-layout fluid grid-list-lg>
-    <v-card flat>
+    <v-card flat height="100%">
       <v-btn @click="readAll" v-show="hasNotif">Tandai sudah dibaca semua</v-btn>
       <v-list two-line>
         <template>
@@ -27,6 +27,9 @@
             indeterminate
             color="primary"
           ></v-progress-circular>
+        </template>
+        <template v-else-if="announcementData.length === 0">
+          <p>Belum ada pengumuman</p>
         </template>
         <template v-else v-for="(item, index) in announcementData">
           <v-list-tile

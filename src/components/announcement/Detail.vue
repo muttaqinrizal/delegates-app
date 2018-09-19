@@ -23,14 +23,14 @@
       <v-layout row wrap class="ma-1">
         <v-flex
           v-for="image in announcementData.images"
-          :key="image"
+          :key="image.original"
           xs4
           d-flex
           @click="previewImage(image)"
         >
           <v-card flat tile class="d-flex">
             <v-img
-              :src="$config.apiBaseUrl + image"
+              :src="$config.apiBaseUrl + image.thumbnail"
               aspect-ratio="1"
               class="grey lighten-2"
             >
@@ -51,7 +51,8 @@
     <v-dialog v-model="showPreview">
       <v-card>
         <v-img
-          :src="$config.apiBaseUrl + imageToPreview"
+          :lazy-src="$config.apiBaseUrl + imageToPreview.thumbnail"
+          :src="$config.apiBaseUrl + imageToPreview.original"
           aspect-ratio="1"
           :contain="true"
           class="grey lighten-2"
