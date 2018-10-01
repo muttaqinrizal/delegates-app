@@ -6,6 +6,10 @@
     :navs="navs"
     >
       <div slot="right-icon">
+        <v-tooltip bottom v-if="!$store.state.isOnline">
+          <v-icon slot="activator">cloud_off</v-icon>
+          <span>Sedang Offline</span>
+        </v-tooltip>
         <router-link to="/announcement" v-if="$route.path !== '/login'">
           <v-btn icon>
             <v-badge overlap color="orange" v-model="showNotifBadge">
@@ -64,7 +68,7 @@ export default {
       return this.$store.state.navigations
     },
     hasNotif () {
-      return this.$store.state.hasNotif
+      return this.$store.state.hasNotif || 0
     },
     showNotifBadge () {
       return this.hasNotif != 0

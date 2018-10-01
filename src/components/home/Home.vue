@@ -12,68 +12,87 @@
           </v-card-actions>
         </v-card>
       </v-flex>
-
-      <v-flex xs12 class="margin-bottom-12">
-        <v-card color="gray darken-2">
-          <v-container fluid grid-list-lg>
-            <v-layout row>
-              <v-flex xs4 sm2 md2 lg2>
-                <img :src="getApiPicture('pembukaan.png')" style="height: 90px;">
-              </v-flex>
-              <v-flex xs8>
-                <h3 class="text-md-left text-sm-left text-xs-left">Sekarang</h3>
-                <div style="text-align: left; margin-bottom: 8px;">
-                      <strong>Pembukaan sas sansa</strong>
-                      <span class="now" >Sekarang</span>
+      <v-flex>
+        <div class="text-xs-left mb-2 title">Acara</div>
+      </v-flex>
+      <template v-if="!isLoading">
+        <v-flex v-if="!(eventData.now && eventData.next)">
+          <div>Tidak ada acara mendatang</div>
+        </v-flex>
+        <v-flex xs12 class="margin-bottom-12" v-if="eventData.now">
+          <v-card color="gray darken-2">
+            <v-container fluid grid-list-lg>
+              <v-layout row wrap>
+                <v-flex d-flex xs3>
+                  <v-img aspect-ratio="1" contain position="top left" :src="$config.apiBaseUrl + eventData.now.image"/>
+                </v-flex>
+                <v-flex xs9>
+                  <div style="padding-left: 10px;">
+                    <h3 class="text-md-left text-sm-left text-xs-left">Sekarang</h3>
+                    <div style="text-align: left; margin-bottom: 8px;">
+                    <strong>{{eventData.now.title}}</strong>
+                      <!-- <span class="now" >Sekarang</span> -->
                     </div>
                     <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                      bebas
+                      {{eventData.now.dresscode}}
                     </div>
                     <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                        WIB
+                        {{eventData.now.start}} - {{eventData.now.end}} WIB
                     </div>
                     <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                      -
+                      {{eventData.now.date}}
                     </div>
                     <div class="bullet location" style="text-align: left;">
-                      -
+                      {{eventData.now.location}}
                     </div>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card>
-      </v-flex>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn outline small @click="$router.push(`/event/${eventData.now._id}`)">Detail</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
 
-      <v-flex xs12 class="margin-bottom-12">
-        <v-card color="gray darken-2">
-          <v-container fluid grid-list-lg>
-            <v-layout row>
-              <v-flex xs4 sm2 md2 lg2>
-                <img :src="getApiPicture('pembukaan.png')" style="height: 90px;">
-              </v-flex>
-              <v-flex xs8>
-                <h3 class="text-md-left text-sm-left text-xs-left">Berikutnya</h3>
-                <div style="text-align: left; margin-bottom: 8px;">
-                      <strong>Pembukaan sas sansa</strong>
-                      <span class="now" >Sekarang</span>
+        <v-flex xs12 class="margin-bottom-12" v-if="eventData.next">
+          <v-card color="gray darken-2">
+            <v-container fluid grid-list-lg>
+              <v-layout row wrap>
+                <v-flex d-flex xs3>
+                  <v-img aspect-ratio="1" contain position="top left" :src="$config.apiBaseUrl + eventData.next.image"/>
+                </v-flex>
+                <v-flex xs9>
+                  <div style="padding-left: 10px;">
+                    <h3 class="text-md-left text-sm-left text-xs-left">Selanjutnya</h3>
+                    <div style="text-align: left; margin-bottom: 8px;">
+                    <strong>{{eventData.next.title}}</strong>
+                      <!-- <span class="now" >Sekarang</span> -->
                     </div>
                     <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                      bebas
+                      {{eventData.next.dresscode}}
                     </div>
                     <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                        WIB
+                        {{eventData.next.start}} - {{eventData.next.end}} WIB
                     </div>
                     <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                      -
+                      {{eventData.next.date}}
                     </div>
                     <div class="bullet location" style="text-align: left;">
-                      -
+                      {{eventData.next.location}}
                     </div>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card>
-      </v-flex>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn outline small @click="$router.push(`/event/${eventData.next._id}`)">Detail</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </template>
 
       <div class="text-xs-center">
         <router-link to="/event">
@@ -84,6 +103,12 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+dayjs.extend(isBetween)
+import localForage from 'localforage'
+var eventStorage = localForage.createInstance({name: 'events'})
 import '../../styles/timeline.css'
 import common from '../../libs/commons'
 export default {
@@ -91,7 +116,11 @@ export default {
   data () {
     return {
       time: null,
-      subscription: ''
+      subscription: '',
+      loadingFailed: false,
+      eventData: {},
+      rawEventData: {},
+      isLoading: true,
     }
   },
   methods: {
@@ -108,12 +137,53 @@ export default {
         }
       })
       console.log('regsss');
-    }
+    },
+    loadEventData () {
+      this.loadingFailed = false
+      axios.get(`${this.$config.apiBaseUrl}/api/event/now`)
+      .then(response => {
+        console.log('from network', response.data);
+        eventStorage.setItem('now', response.data)
+        this.rawEventData = JSON.parse(JSON.stringify(response.data))
+        this.isLoading = false
+      })
+      .catch(err => {
+        this.isLoading = false
+        eventStorage.getItem('now')
+        .then(data => {
+          if(data) {
+            this.rawEventData = data
+            console.log('from IndexedDb', data);
+          }
+          else {
+            this.loadingFailed = true
+          }
+        })
+        console.error(err);
+      })
+    },
+  },
+  watch: {
+    rawEventData (val) {
+      ['now', 'next'].forEach(event => {
+        console.log(event);
+        var eventData = val[event]
+        if (val[event]) {
+          var start = dayjs(val[event].start * 1000)
+          var end = dayjs(val[event].end * 1000)
+          eventData.now = event === 'now'
+          eventData.date = start.format('DD MMMM YYYY')
+          eventData.start = start.format('HH:mm')
+          eventData.end = end.format('HH:mm')
+        }
+        this.eventData[event] = eventData
+      })
+    },
   },
   mounted () {
-    // this.$store.commit('setHeaderTitle', 'FLS Guide')
     this.$store.commit('setActiveNavigation', 'home')
     this.subscription = Notification.permission
+    this.loadEventData()
   }
 }
 </script>

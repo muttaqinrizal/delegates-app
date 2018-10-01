@@ -5,6 +5,10 @@
       indeterminate
       color="primary"
     ></v-progress-circular>
+    <template v-else-if="loadingFailed">
+      <p>Gagal memuat pengumuman</p>
+      <v-btn color="primary" @click="loadAnnouncementData()">Muat ulang</v-btn>
+    </template>
     <v-card v-else>
       <v-card-title primary-title>
         <div class="headline">
@@ -48,7 +52,7 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-dialog v-model="showPreview">
+    <v-dialog v-if="showPreview" v-model="showPreview">
       <v-card>
         <v-img
           :lazy-src="$config.apiBaseUrl + imageToPreview.thumbnail"
@@ -70,8 +74,11 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
 import marked from 'marked'
+import {clone} from 'lodash'
+import localForage from 'localforage'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
+var anncStorage = localForage.createInstance({name: 'announcements'})
 export default {
   name: 'dashboard',
   data () {
@@ -80,23 +87,34 @@ export default {
       announcementData: {},
       showPreview: false,
       imageToPreview: '',
+      loadingFailed: false,
     }
   },
   methods: {
     dayjs: dayjs,
     loadAnnouncementData () {
       this.isLoading = true
+      this.loadingFailed = false
       axios.get(`${this.$config.apiBaseUrl}/api/announcement/${this.$route.params.id}`)
       .then(response => {
         console.log('from network', response.data);
-        this.announcementData = response.data
+        this.announcementData = JSON.parse(JSON.stringify(response.data))
+        anncStorage.setItem(this.$route.params.id, response.data)
         this.announcementData.content = marked(response.data.content, { sanitize: true })
         this.isLoading = false
       })
       .catch(err => {
         this.isLoading = false
-        this.loadingFailed = true
-        this.offline = true
+        anncStorage.getItem(this.$route.params.id)
+        .then(data => {
+          if(data) {
+            this.announcementData = data
+            console.log('from IndexedDb', data);
+          }
+          else {
+            this.loadingFailed = true
+          }
+        })
         console.log(err);
       })
     },

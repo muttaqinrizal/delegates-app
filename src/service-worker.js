@@ -5,6 +5,17 @@ const strategies = {
   CACHE_FALLING_BACK_TO_NETWORK: 'cache2net',
   NETWORK_ONLY: 'netonly',
 }
+const FRONTEND = /((https\:\/\/fls\.nurulirfan\.com)|(http:\/\/localhost:3000))(?!.*sockjs-node)./
+const API_ASSETS = /(?=.*\/api\/static\/)(?!.*hires).*/
+const CONTENT = /\/api\/((?!static))/
+const origins = [
+  'https://apifls.nurulirfan.com',
+  'http://localhost:8080',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  self.location.origin,
+]
+
 import localForage from 'localforage'
 
 let assetsToCache = [
@@ -72,28 +83,28 @@ function cacheToNetwork (event) {
 }
 
 function networkToCache (event) {
-  console.log('a1');
+  // console.log('a1');
   return fetch(event.request, {cache: 'no-cache'})
   .then(nResponse => {
-    console.log('a2');
+    // console.log('a2');
     return caches.open(CACHE).then(function (cache) {
-      console.log('a3');
+      // console.log('a3');
       return cache.match(event.request).then(function (cResponse) {
-        console.log('a3');
+        // console.log('a3');
         if (nResponse.status >= 200 || nResponse.status < 400 ) {
-          console.log('a4');
+          console.log(event.request.url, 'terambil dari network');
           cache.put(event.request, nResponse.clone())
           return nResponse
         }
         else {
-          console.log('a5');
+          console.log(event.request.url, 'terambil dari cache');
           return cResponse
         }
       })
     })
   })
   .catch(() => {
-    console.log('a6');
+    console.log(event.request.url, 'terambil dari cache');
     return caches.match(event.request);
   })
 }
@@ -140,18 +151,8 @@ function precache() {
 }
 
 function whichStrategies (event) {
-  const FRONTEND = /(https\:\/\/fls\.nurulirfan\.com)|(http:\/\/localhost:8080)/
-  const API_ASSETS = /(?=.*\/api\/static\/)(?!.*hires).*/
-  const CONTENT = /\/api\/((?!static))/
-
   var request = event.request.clone()
   var url = new URL(request.url)
-  var origins = [
-    'https://apifls.nurulirfan.com',
-    'http://localhost:8080',
-    'http://localhost:3000',
-    self.location.origin,
-  ]
 
   var isGET = request.method === 'GET'
   var isOriginAllowed = origins.indexOf(url.origin) >= 0
@@ -160,7 +161,7 @@ function whichStrategies (event) {
     if (FRONTEND.test(url.href)) {
       return strategies.CACHE_FALLING_BACK_TO_NETWORK
     }
-    else if (API_ASSETS.test(url.pathname) || CONTENT.test(url.pathname)) { // use network first
+    else if (API_ASSETS.test(url.pathname)) { // use network first
       return strategies.NETWORK_FALLING_BACK_TO_CACHE
     }
     else {

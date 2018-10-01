@@ -10,7 +10,7 @@ export default new Vuex.Store({
     navigations: {
       home: { icon: 'home', title: 'FLS Guide', path: '/' },
       event: { icon: 'event', title: 'Acara', path: '/event' },
-      vote: { icon: 'how_to_vote', title: 'Voting', path: '/vote' },
+      vote: { icon: 'how_to_vote', title: 'Kelas', path: '/class' },
       // merchandise: { icon: 'shopping_cart', title: 'Merchandise', path: '/merchandise' },
       account: { icon: 'account_circle', title: 'Akun', path: '/account' }
     },
@@ -21,6 +21,8 @@ export default new Vuex.Store({
     showSnackbar: false,
     snackbarMessage: '',
     snackbarType: '',
+    isOnline: true,
+    isRanger: false
   },
   mutations: {
     setHeaderTitle (state, newTitle) {
@@ -50,7 +52,13 @@ export default new Vuex.Store({
     },
     setSnackbarType(state, newType) {
       state.snackbarType = newType
-    }
+    },
+    setIsOnline(state, online) {
+      state.isOnline = online
+    },
+    setIsRanger(state, ranger) {
+      state.isRanger = ranger
+    },
   },
   actions: {
     notify({commit}, data) {

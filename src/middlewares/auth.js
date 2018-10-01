@@ -7,7 +7,7 @@ export default {
   requireAuth: async function(to, from, next) {
     var token = await localForage.getItem('authToken')
     // var ok = await commons.checkAuth(token)
-    console.log('token:', token);
+    // console.log('token:', token);
     
     if (token) {
       store.commit('setHasNotif', await localForage.getItem('notif'))

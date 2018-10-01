@@ -6,6 +6,15 @@ const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
 module.exports = {
   entry: {
+    commons: [
+      'axios',
+      'dayjs',
+      'vue-filepond',
+      'lodash',
+      'marked',
+      'filepond-plugin-image-preview',
+      'localforage',
+    ],
     swRegistration: './src/sw-register.js',
     main: './src/main.js',
     'babel-polyfill': 'babel-polyfill'
@@ -13,7 +22,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
-    filename: '[name].js'
+    filename: '[name].js',
+    chunkFilename: '[name].js'
   },
   module: {
     rules: [
@@ -59,10 +69,10 @@ module.exports = {
     new ServiceWorkerWebpackPlugin({
       entry: path.resolve(__dirname, 'src/service-worker.js')
     }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: "commons",
-    //   filename: "commons.[hash].js",
-    // })
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "commons",
+      filename: "commons.js",
+    })
 
   ],
   resolve: {
@@ -96,7 +106,7 @@ if (process.env.NODE_ENV === 'production') {
       'BUILDSTAMP': new Date().getTime()
     }),
     new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
+      sourceMap: false,
       compress: {
         warnings: false
       }

@@ -1,19 +1,16 @@
 <template>
-  <v-dialog
-    v-model="show"
-    fullscreen
-    hide-overlay
-    transition="dialog-bottom-transition"
-    scrollable
-  >
-    <v-card tile>
-      <v-toolbar card dark color="primary">
-        <v-btn icon dark @click="closeFn">
-          <v-icon>close</v-icon>
-        </v-btn>
-        <v-toolbar-title>{{title}}</v-toolbar-title>
-      </v-toolbar>
-      <v-card-text v-if="!isLoading" class="text-xs-center">
+  <v-container fluid grid-list-lg>
+    <v-progress-circular
+      v-if="isLoading"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
+    <template v-else-if="loadingFailed">
+      <p>Gagal memuat event</p>
+      <v-btn color="primary" @click="loadEventData()">Muat ulang</v-btn>
+    </template>
+    <v-card tile v-else>
+      <v-card-text class="text-xs-center">
         <v-container xs12 sm10 md6>
           <v-layout row wrap mb-4>
             <v-flex xs9>
@@ -26,7 +23,7 @@
                   {{ eventData.dresscode }}
                 </div>
                 <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                  {{ eventData.time.start }} - {{ eventData.time.end }} WIB
+                  {{ eventData.start }} - {{ eventData.end }} WIB
                 </div>
                 <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
                   {{ eventData.date || '-'}}
@@ -37,87 +34,82 @@
               </div>
             </v-flex>
             <v-flex d-flex xs3>
-              <img :key="new Date().getTime()" :src="getApiPicture(eventData.image)" style="height: 120px; width: auto;">
+              <v-img aspect-ratio="1" contain position="top left" :src="$config.apiBaseUrl + eventData.image"></v-img>
             </v-flex>
           </v-layout>
           <v-layout>
-            a
+            {{eventData.description}}
           </v-layout>
         </v-container>
       </v-card-text>
-      <v-container v-if="isLoading" class="text-xs-center">
-        <v-progress-circular
-          :width="6"
-          indeterminate
-          color="primary">
-        </v-progress-circular>
-      </v-container>
-      <div style="flex: 1 1 auto;"></div>
     </v-card>
-  </v-dialog>
+  </v-container>
 </template>
 
 <script>
   import axios from 'axios'
+  import dayjs from 'dayjs'
+  import isBetween from 'dayjs/plugin/isBetween'
+  dayjs.extend(isBetween)
   import localForage from 'localforage'
   import commons from '../../libs/commons.js'
-
+  var eventStorage = localForage.createInstance({name: 'events'})
   export default {
-    props: ['show', 'eventId', 'title'],
     data () {
       return {
+        rawEventData: {},
         eventData: {},
         isLoading: true,
         loadingFailed: false,
       }
     },
     methods: {
-      closeFn () {
-        this.$emit('close-fn')
-      },
       getApiPicture(name) {
         return commons.getApiPicture(name)
       },
       loadEventData () {
-        axios.get(`${this.$config.apiBaseUrl}/api/event/detail?id=${this.eventId}`)
+        this.loadingFailed = false
+        axios.get(`${this.$config.apiBaseUrl}/api/event/${this.$route.params.id}`)
         .then(response => {
           console.log('from network', response.data);
-          localForage.setItem(`event_${this.eventId}`, JSON.stringify(response.data))
-          this.eventData = response.data
+          eventStorage.setItem(this.$route.params.id, response.data)
+          this.rawEventData = JSON.parse(JSON.stringify(response.data))
           this.isLoading = false
         })
         .catch(err => {
-        localForage.getItem(`event_${this.eventId}`)
-          .then(event => {
-            console.log('from localforage', event);
-            if (event) {
-              this.eventData = JSON.parse(event)
-              this.offline = true
+          this.isLoading = false
+          eventStorage.getItem(this.$route.params.id)
+          .then(data => {
+            if(data) {
+              this.rawEventData = data
+              console.log('from IndexedDb', data);
             }
             else {
               this.loadingFailed = true
             }
-            this.isLoading = false
           })
-          .catch(err => {
-            console.log(err)
-            this.loadingFailed = true
-            this.isLoading = false
-          })
+          console.error(err);
         })
       }
     },
     watch: {
-      show (val) {
-        if (val) {
-          this.loadEventData()
-        }
+      rawEventData (val) {
+        var start = dayjs(val.start * 1000)
+        var end = dayjs(val.end * 1000)
+        var now = new Date()
+        this.eventData = val
+        this.eventData.now = dayjs(now).isBetween(start, end)
+        this.eventData.date = start.format('DD MMMM YYYY')
+        this.eventData.start = start.format('HH:mm')
+        this.eventData.end = end.format('HH:mm')
       }
     },
     mounted () {
-      this.$nextTick(() => {
-        // this.loadEventData()
-      })
+      this.loadEventData()
+      this.$store.commit('setShowBackBtn', true)
+    },
+    destroyed () {
+      this.$store.commit('setShowBackBtn', false)
     }
   }
 </script>

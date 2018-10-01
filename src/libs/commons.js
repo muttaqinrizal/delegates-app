@@ -30,7 +30,7 @@ let commons = {
   },
   async getUserDetail() {
     var name = await localForage.getItem('userName') || ''
-    var email = await localForage.getItem('userId') || ''
+    var email = await localForage.getItem('userEmail') || ''
     var room = await localForage.getItem('userRoom') || ''
     return {name, email, room}
   },

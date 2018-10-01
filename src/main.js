@@ -15,6 +15,13 @@ import config from './config'
 var setting = config.development
 if (ENVIRONMENT === 'production') setting = config.production
 
+window.addEventListener('online', function () {
+  store.commit('setIsOnline', true)
+})
+window.addEventListener('offline', function () {
+  store.commit('setIsOnline', false)
+})
+
 var loading = document.getElementById('first-loader')
 if(loading) {
   loading.remove()
@@ -22,6 +29,10 @@ if(loading) {
 Vue.prototype.$config = setting
 Vue.use(Vuetify, VueRouter, Vuex)
 Validator.localize('id', VeeId)
+Validator.extend('array', {
+  getMessage: field => field + ' harus diisi.',
+  validate: value => value.length > 0
+});
 Vue.use(VeeValidate , {events: 'change|custom|blur'})
 
 new Vue({

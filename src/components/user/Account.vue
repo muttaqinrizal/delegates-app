@@ -21,8 +21,12 @@
           <div>
             {{user.email}}
           </div>
-          <div>
-            Room: {{user.room}}
+          <div v-if="user.room.length > 0">
+            Room:
+            <span v-for="room in user.room">{{room}} </span>
+          </div>
+          <div v-else>
+            Ranger
           </div>
           <div>
             <v-btn @click="logoutFn">
