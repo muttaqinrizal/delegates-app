@@ -82,13 +82,32 @@
               </v-flex>
             </v-layout>
             <v-divider></v-divider>
+            <v-layout row v-if="existingImage">
+              <v-flex>
+                <div class="text-xs-left">Gambar sekarang</div>
+              </v-flex>
+              <v-flex xs3>
+                <v-img
+                  :src="$config.apiBaseUrl + existingImage"
+                  aspect-ratio="1"
+                  class="grey lighten-2"
+                >
+                  <v-layout
+                    slot="placeholder"
+                    fill-height
+                    align-center
+                    justify-center
+                    ma-1
+                  >
+                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                  </v-layout>
+                </v-img>
+              </v-flex>
+            </v-layout>
             <v-layout row>
               <v-flex>
                 <file-pond
                   :files="images"
-                  v-model="images"
-                  name="image"
-                  v-validate="'array'"
                   :allow-multiple="false"
                   image-preview-max-height="100"
                   :allow-image-preview="true"
@@ -122,19 +141,21 @@ import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 const FilePond = vueFilePond(FilePondPluginImagePreview)
 export default {
-  name: 'ClassNew',
+  name: 'ClassEdit',
   components: {FilePond},
   data () {
     return {
       name: '',
       max: '',
       location: '',
-      description: '',
       panelist: '',
+      description: '',
       compiledDesc: '',
+      existingImage: '',
       images: [],
       valid: false,
       isLoading: false,
+      loadingFailed: false,
     }
   },
   methods: {
@@ -144,6 +165,25 @@ export default {
     },
     removefile(file) {
       this.images = []
+    },
+    loadClassData () {
+      this.isLoading = true
+      axios.get(`${this.$config.apiBaseUrl}/api/class/${this.$route.params.id}`)
+      .then(response => {
+        this.name = response.data.name
+        this.max = response.data.max
+        this.description = response.data.description
+        this.panelist = response.data.panelist
+        this.location = response.data.location
+        this.existingImage = response.data.image
+        this.isLoading = false
+        this.id = response.data._id
+      })
+      .catch(err => {
+        this.isLoading = false
+        this.loadingFailed = true
+        console.error(err);
+      })
     },
     saveClass () {
       this.$validator.validate().then(valid => {
@@ -160,8 +200,9 @@ export default {
           data.append('location', this.location)
           data.append('description', this.description)
           data.append('panelist', this.panelist)
+          data.append('id', this.id)
           axios({
-            url: `${this.$config.apiBaseUrl}/api/class/create`,
+            url: `${this.$config.apiBaseUrl}/api/class/update`,
             method: 'post',
             data: data
           })
@@ -198,6 +239,7 @@ export default {
     this.$store.commit('setHeaderTitle', 'Buat Kelas')
     // this.$store.commit('setActiveNavigation', 'announcement')
     this.$store.commit('setShowBackBtn', true)
+    this.loadClassData()
     
   },
   destroyed () {

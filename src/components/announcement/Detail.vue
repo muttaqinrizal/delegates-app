@@ -95,17 +95,17 @@ export default {
     loadAnnouncementData () {
       this.isLoading = true
       this.loadingFailed = false
-      axios.get(`${this.$config.apiBaseUrl}/api/announcement/${this.$route.params.id}`)
+      axios.get(`${this.$config.apiBaseUrl}/api/announcement/${this.$route.query.id}`)
       .then(response => {
         console.log('from network', response.data);
         this.announcementData = JSON.parse(JSON.stringify(response.data))
-        anncStorage.setItem(this.$route.params.id, response.data)
+        anncStorage.setItem(this.$route.query.id, response.data)
         this.announcementData.content = marked(response.data.content, { sanitize: true })
         this.isLoading = false
       })
       .catch(err => {
         this.isLoading = false
-        anncStorage.getItem(this.$route.params.id)
+        anncStorage.getItem(this.$route.query.id)
         .then(data => {
           if(data) {
             this.announcementData = data

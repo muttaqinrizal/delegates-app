@@ -48,8 +48,9 @@ let commons = {
           applicationServerKey: convertedVapidPublicKey
         })
       })
-      .then(subscription => {
-        console.log('aaa');
+      .then(async function (subscription) {
+        console.log('[*] Registering subscription');
+        var stamp = await localForage.getItem('loginStamp')
         axios({
           method: 'post',
           url: `${setting.apiBaseUrl}/api/subs/register`,
@@ -57,6 +58,7 @@ let commons = {
             'Content-type': 'application/json'
           },
           data: {
+            stamp: stamp,
             subscription: subscription
           }
         })
@@ -90,7 +92,27 @@ let commons = {
     })
   },
   logoutFn() {
-    return localForage.clear()
+    var events = localForage.createInstance({name: 'events'})
+    var annc = localForage.createInstance({name: 'announcements'})
+    var classRoom = localForage.createInstance({name: 'class'})
+    localForage.getItem('loginStamp').then(stamp => {
+      axios({
+        method: 'post',
+        url: `${setting.apiBaseUrl}/api/subs/unregister`,
+        data: {stamp}
+      }).then(response => {
+        console.log('[*] Unsubscribed from push notification');
+      }).catch(error => {
+        console.log('[X] Error when unsubscribing from push notification');
+        console.log('[X]', error.message)
+      })
+    })
+    return Promise.all([
+      events.dropInstance(),
+      annc.dropInstance(),
+      classRoom.dropInstance(),
+      localForage.clear()
+    ])
   }
 }
 

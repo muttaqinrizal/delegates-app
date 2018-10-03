@@ -8,23 +8,22 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js', {
     scope: './'
   }).then(function (registration) {
-    var serviceWorker;
+    // var serviceWorker;
     if (registration.installing) {
-      serviceWorker = registration.installing;
-      console.log('installing')
+      // serviceWorker = registration.installing;
+      console.log('[*] SW state: installing')
     } else if (registration.waiting) {
-      serviceWorker = registration.waiting;
-      console.log('waiting')
+      // serviceWorker = registration.waiting;
+      console.log('[*] SW state: waiting')
     } else if (registration.active) {
-      serviceWorker = registration.active;
-      console.log('active')
+      // serviceWorker = registration.active;
+      console.log('[*] SW state: active')
     }
-    if (serviceWorker) {
-      // logState(serviceWorker.state);
-      serviceWorker.addEventListener('statechange', function (e) {
-        // logState(e.target.state);
-      });
-    }
+    // if (serviceWorker) {
+    //   serviceWorker.addEventListener('statechange', function (e) {
+
+    //   });
+    // }
   }).catch(function (error) {
     // Something went wrong during registration. The service-worker.js file
     // might be unavailable or contain a syntax error.

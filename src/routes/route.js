@@ -14,6 +14,7 @@ const AnnouncementDetail = () => import(/* webpackChunkName: "announcement" */ '
 const AnnouncementNew = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/New.vue');
 const Class = () => import(/* webpackChunkName: "event" */ '../components/class/Class.vue');
 const ClassNew = () => import(/* webpackChunkName: "event" */ '../components/class/New.vue');
+const ClassEdit = () => import(/* webpackChunkName: "event" */ '../components/class/Edit.vue');
 const ClassDetail = () => import(/* webpackChunkName: "event" */ '../components/class/Detail.vue');
 Vue.use(Router)
 
@@ -28,9 +29,10 @@ export default new Router({
     { path: '/event/:id', name: 'EventDetail', beforeEnter: authMid.requireAuth, component: EventDetail },
     { path: '/announcement', name: 'Announcement', beforeEnter: authMid.requireAuth, component: Announcement },
     { path: '/announcement/new', name: 'AnnouncementNew', beforeEnter: authMid.requireAuth, component: AnnouncementNew },
-    { path: '/announcement/:id', name: 'AnnouncementDetail', beforeEnter: authMid.requireAuth, component: AnnouncementDetail },
+    { path: '/announcement/detail', name: 'AnnouncementDetail', beforeEnter: authMid.requireAuth, component: AnnouncementDetail },
     { path: '/class/', name: 'Class', beforeEnter: authMid.requireAuth, component: Class },
     { path: '/class/new', name: 'ClassNew', beforeEnter: authMid.requireAuth, component: ClassNew },
+    { path: '/class/edit/:id', name: 'ClassEdit', beforeEnter: authMid.requireAuth, component: ClassEdit },
     { path: '/class/:id', name: 'ClassDetail', beforeEnter: authMid.requireAuth, component: ClassDetail },
   ],
   mode: 'history',

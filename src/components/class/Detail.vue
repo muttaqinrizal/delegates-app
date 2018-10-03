@@ -1,30 +1,94 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-progress-circular
-      v-if="isLoading"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <template v-else-if="loadingFailed">
-      <p>Gagal memuat pengumuman</p>
-      <v-btn color="primary" @click="loadClassData()">Muat ulang</v-btn>
-    </template>
-    <v-card v-else>
-      <v-card-title primary-title>
-        <div class="headline">
-          {{classData.name}}
-        </div>
-      </v-card-title>
-      <v-card-text class="text-xs-left text-sm-left">
-        <div>Panelis: {{classData.panelist}}</div>
-        <div>Peserta: {{classData.participants.length}}/{{classData.max}}</div>
-        <v-divider></v-divider>
-        <div style="margin-bottom: 24px;"></div>
-        <div class="preview-md" v-html="classData.description"></div>
-
-      </v-card-text>
-    </v-card>
-  </v-container>
+  <v-layout fluid grid-list-lg>
+    <v-flex>
+      <v-progress-circular
+        v-if="isLoading"
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+      <template v-else-if="loadingFailed">
+        <p>Gagal memuat pengumuman</p>
+        <v-btn color="primary" @click="loadClassData()">Muat ulang</v-btn>
+      </template>
+      <template v-else>
+        <v-container v-if="!isClassOpen">
+          <v-card color="blue-grey darken-2" class="white--text">
+            <v-card-title>
+              Kelas belum dibuka
+              <v-spacer></v-spacer>
+              <v-btn icon color="white" @click="loadClassData()">
+                <v-icon>refresh</v-icon>
+              </v-btn>
+            </v-card-title>
+          </v-card>
+        </v-container>
+        <v-container>
+          <v-card>
+            <v-layout row>
+              <v-flex xs8 sm10 md10 lg10>
+                <v-card-title primary-title>
+                  <div class="headline">
+                    {{classData.name}}
+                  </div>
+                </v-card-title>
+              </v-flex>
+              <v-flex xs4 sm2 md2 lg2>
+                <div class="pa-2">
+                  <v-img contain v-if="classData.image" :src="$config.apiBaseUrl + classData.image"></v-img>
+                  <v-img contain v-else :src="$config.baseUrl + '/images/logo.png'"></v-img>
+                </div>
+              </v-flex>
+            </v-layout>
+            <v-card-text class="text-xs-left text-sm-left">
+              <div>Panelis: {{classData.panelist}}</div>
+              <div>Peserta: {{classData.participants.length}}/{{classData.max}}</div>
+              <div>Tempat: {{classData.location}}</div>
+              <v-divider></v-divider>
+              <div style="margin-bottom: 24px;"></div>
+              <div class="preview-md" v-html="classData.description"></div>
+            </v-card-text>
+            <v-card-actions>
+              <!-- TODO: action button-->
+              <div style="margin-left: 8px" v-if="classData.participants.indexOf(me) >= 0">
+                <v-icon color="green">check_circle</v-icon>
+                <span>Terdaftar</span>
+              </div>
+              <v-spacer></v-spacer>
+              <template v-if="isRanger">
+                <v-btn icon @click="deleteDialog(classData._id)">
+                  <v-icon color="red">delete_forever</v-icon>
+                </v-btn>
+                <v-btn icon @click="$router.push(`/event/edit/${classData._id}`)">
+                  <v-icon color="green">edit</v-icon>
+                </v-btn>
+              </template>
+              <v-btn outline color="orange" @click="$router.push('/class/'+classData._id)">Detail</v-btn>
+              <v-btn
+                v-if="!registered && !isRanger"
+                :disabled="(classData.max - classData.participants.length) <= 0 || registering || !isClassOpen"
+                color="primary"
+                @click="registerClass(classData._id)"
+              >
+                Daftar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-container>
+      </template>
+    </v-flex>
+    <v-dialog v-model="showDelete" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">Hapus kelas?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" :disabled="deleteLoading" @click.native="closeDelete()">Batal</v-btn>
+          <v-btn color="error" :loading="deleteLoading" outline flat @click.native="deleteClass()">
+            Hapus
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-layout>
 </template>
 
 <script>
@@ -39,6 +103,13 @@
         classData:{},
         isLoading: true,
         loadingFailed: false,
+        me: '',
+        isRanger: false,
+        registering: false,
+        isClassOpen: false,
+        deleteId: null,
+        showDelete: false,
+        deleteLoading: false,
       }
     },
     methods: {
@@ -70,14 +141,112 @@
           })
           console.error(err);
         })
+      },
+      registerClass(id) {
+        this.registering = true
+        axios({
+          url: `${this.$config.apiBaseUrl}/api/class/attend`,
+          method: 'post',
+          data: {
+            classId: id
+          }
+        })
+        .then(response => {
+          this.registering = false
+          this.notify({message: 'Berhasil terdaftar di kelas', type: 'success'})
+          this.loadClassData()
+        })
+        .catch(err => {
+          this.registering = false
+          console.log(err);
+          this.notify({message: err.message, type: 'error'})
+        })
+      },
+      deleteDialog(id) {
+        this.deleteId = id
+        this.showDelete = true
+      },
+      closeDelete() {
+        this.deleteId = null
+        this.showDelete = false
+      },
+      deleteClass () {
+        this.deleteLoading = true
+        axios({
+          method: 'delete',
+          url: `${this.$config.apiBaseUrl}/api/class/delete`,
+          data: {
+            id: this.deleteId
+          }
+        })
+        .then(response => {
+          this.deleteLoading = false
+          this.closeDelete()
+          this.$router.replace('/class')
+          this.notify({message: 'Kelas dihapus', type: 'success'})
+        })
+        .catch(error => {
+          this.deleteLoading = false
+          this.closeDelete()
+          this.notify({message: error.message, type: 'error'})
+        })
+      },
+      toggleClass () {
+        axios({
+          method: 'post',
+          url: `${this.$config.apiBaseUrl}/api/class/toggle`,
+          data: {
+            isOpen: !this.isClassOpen
+          }
+        })
+        .then(response => {
+          this.isClassOpen = response.data.value
+          this.showToggle = false
+        })
+        .catch(error => {
+          this.showToggle = false
+          this.notify({message: error.message, type: 'error'})
+        })
+      },
+      getToggleClass () {
+        axios({
+          url: `${this.$config.apiBaseUrl}/api/class/setting`
+        })
+        .then(response => {
+          this.isClassOpen = response.data.value
+        })
+        .catch(error => {
+          this.notify({message: error.message, type: 'error'})
+        })
       }
     },
     watch: {
       
     },
+    computed: {
+      registered () {
+        if (this.classData) {
+          console.log(this.classData);
+          
+          if (this.classData.participants.indexOf(this.me) >= 0) {
+            return true
+          }
+          else {
+            return false
+          }
+        }
+      },
+    },
     mounted () {
       this.loadClassData()
+      this.getToggleClass()
       this.$store.commit('setShowBackBtn', true)
+      localForage.getItem('apiUserId').then(id => {
+        this.me = id
+      })
+      localForage.getItem('roles').then(roles => {
+        if(roles.indexOf('RANGER') >= 0) this.isRanger = true
+      })
     },
     destroyed () {
       this.$store.commit('setShowBackBtn', false)

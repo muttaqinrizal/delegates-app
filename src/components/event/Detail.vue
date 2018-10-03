@@ -38,7 +38,9 @@
             </v-flex>
           </v-layout>
           <v-layout>
-            {{eventData.description}}
+            <v-flex class="text-xs-left">
+              <div class="preview-md" v-html="compiledDesc"></div>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-card-text>
@@ -49,6 +51,7 @@
 <script>
   import axios from 'axios'
   import dayjs from 'dayjs'
+  import marked from 'marked'
   import isBetween from 'dayjs/plugin/isBetween'
   dayjs.extend(isBetween)
   import localForage from 'localforage'
@@ -61,6 +64,7 @@
         eventData: {},
         isLoading: true,
         loadingFailed: false,
+        compiledDesc: ''
       }
     },
     methods: {
@@ -90,7 +94,10 @@
           })
           console.error(err);
         })
-      }
+      },
+      compileMarkdown: function () {
+        this.compiledDesc = marked(this.eventData.description, { sanitize: true })
+      },
     },
     watch: {
       rawEventData (val) {
@@ -102,6 +109,7 @@
         this.eventData.date = start.format('DD MMMM YYYY')
         this.eventData.start = start.format('HH:mm')
         this.eventData.end = end.format('HH:mm')
+        this.compileMarkdown()
       }
     },
     mounted () {

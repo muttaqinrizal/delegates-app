@@ -29,7 +29,7 @@
             Ranger
           </div>
           <div>
-            <v-btn @click="logoutFn">
+            <v-btn @click="logoutFn" :loading="logoutLoading" :disabled="logoutLoading">
               Logout
             </v-btn>
           </div>
@@ -48,7 +48,8 @@ export default {
         name: '',
         email: '',
         room: '',
-      }
+      },
+      logoutLoading: false
     }
   },
   methods: {
@@ -59,9 +60,15 @@ export default {
       return commons.getApiPicture(path)
     },
     logoutFn() {
+      this.logoutLoading = true
       commons.logoutFn()
-      .then(() => {
+      .then((e) => {
+        console.log(e);
+        this.logoutLoading = false
         this.$router.push('/login')
+      })
+      .catch(() => {
+        this.logoutLoading = false
       })
     }
   },

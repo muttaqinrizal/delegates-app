@@ -297,7 +297,7 @@ export default {
           var data = new FormData()
           if (this.images) {
             this.images.forEach(image => {
-              data.append('images', image, image.name)
+              data.append('image', image, image.name)
             })
           }
           data.append('id', this.$route.params.id)

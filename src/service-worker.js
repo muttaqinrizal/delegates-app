@@ -21,7 +21,7 @@ import localForage from 'localforage'
 let assetsToCache = [
   ...serviceWorkerOption.assets,
   '/',
-  '/event',
+  '/announcement/detail'
   // '/css/roboto.css',
   // '/fonts/material-icon.woff2',
   // '/fonts/roboto-v18-latin-300.woff',
@@ -33,22 +33,22 @@ let assetsToCache = [
   // '/fonts/roboto-v18-latin-regular.woff',
   // '/fonts/roboto-v18-latin-regular.woff2',
 ]
-console.log('Assets to be cached:', assetsToCache);
 
 
 self.addEventListener('install', function (event) {
-  console.log('[PWA Builder] The service worker is being installed.');
+  console.log('[*] The service worker is being installed.');
+  console.log('[*] Assets to be cached:', assetsToCache);
   event.waitUntil(precache().then(function () {
     // console.log('[PWA Builder] Skip waiting on install');
-    // return self.skipWaiting();
-    console.log('all files are cached');
+    console.log('[*] all files are cached. Installed.');
+    return self.skipWaiting();
     
   }));
 });
 
 //allow sw to control of current page
 self.addEventListener('activate', function (event) {
-  console.log('[PWA Builder] Claiming clients for current page');
+  console.log('[*] Claiming clients for current page');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       var toBeDeleted = cacheNames.filter(cache => cache !== CACHE)

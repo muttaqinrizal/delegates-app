@@ -16,7 +16,7 @@
         <div class="text-xs-left mb-2 title">Acara</div>
       </v-flex>
       <template v-if="!isLoading">
-        <v-flex v-if="!(eventData.now && eventData.next)">
+        <v-flex v-if="!eventData.now && !eventData.next">
           <div>Tidak ada acara mendatang</div>
         </v-flex>
         <v-flex xs12 class="margin-bottom-12" v-if="eventData.now">
@@ -118,9 +118,13 @@ export default {
       time: null,
       subscription: '',
       loadingFailed: false,
-      eventData: {},
+      eventData: {
+        now: null,
+        next: null
+      },
       rawEventData: {},
       isLoading: true,
+      temp: [],
     }
   },
   methods: {
@@ -140,16 +144,16 @@ export default {
     },
     loadEventData () {
       this.loadingFailed = false
-      axios.get(`${this.$config.apiBaseUrl}/api/event/now`)
+      axios.get(`${this.$config.apiBaseUrl}/api/event`)
       .then(response => {
         console.log('from network', response.data);
-        eventStorage.setItem('now', response.data)
+        eventStorage.setItem('index', response.data)
         this.rawEventData = JSON.parse(JSON.stringify(response.data))
         this.isLoading = false
       })
       .catch(err => {
         this.isLoading = false
-        eventStorage.getItem('now')
+        eventStorage.getItem('index')
         .then(data => {
           if(data) {
             this.rawEventData = data
@@ -164,20 +168,68 @@ export default {
     },
   },
   watch: {
-    rawEventData (val) {
-      ['now', 'next'].forEach(event => {
-        console.log(event);
-        var eventData = val[event]
-        if (val[event]) {
-          var start = dayjs(val[event].start * 1000)
-          var end = dayjs(val[event].end * 1000)
-          eventData.now = event === 'now'
-          eventData.date = start.format('DD MMMM YYYY')
-          eventData.start = start.format('HH:mm')
-          eventData.end = end.format('HH:mm')
+    rawEventData (events) {
+      var eventData = []
+      var eventsCopy = JSON.parse(JSON.stringify(events))
+      eventsCopy.forEach(event => {
+        var _eventData = event
+        if (event) {
+          var start = dayjs(event.start * 1000)
+          var end = dayjs(event.end * 1000)
+          _eventData.date = start.format('DD MMMM YYYY')
+          _eventData.start = start.format('HH:mm')
+          _eventData.end = end.format('HH:mm')
         }
-        this.eventData[event] = eventData
+        eventData.push(event)
       })
+      this.temp = eventData
+      
+      var now = dayjs(new Date())
+      if (events.length > 0) {
+        var firstStart = dayjs(events[0].start * 1000)
+        var lastEnd = dayjs(events[events.length-1].end * 1000)
+        // console.log(lastEnd);
+        
+        if (now.isBefore(firstStart)) {
+          this.eventData.now = null
+          this.eventData.next = eventData[0]
+        }
+        else if (now.isAfter(lastEnd)) {
+          this.eventData.now = null
+          this.eventData.next = null
+        }
+        else {
+          var theOnlyNext = null
+          
+          events.forEach((event, index) => {
+            var start = dayjs(event.start * 1000)
+            var end = dayjs(event.end * 1000)
+            if (now.isBetween(start, end)) {
+              this.eventData.now = eventData[index]
+              this.eventData.next = eventData[index+1]
+            }
+            else if (!theOnlyNext && now.isBefore(start)) {
+              this.eventData.next = eventData[index]
+            }
+          })
+        }
+        this.temp = eventData
+        
+      }
+      //old
+      // ['now', 'next'].forEach(event => {
+      //   console.log(event);
+      //   var eventData = val[event]
+      //   if (val[event]) {
+      //     var start = dayjs(val[event].start * 1000)
+      //     var end = dayjs(val[event].end * 1000)
+      //     eventData.now = event === 'now'
+      //     eventData.date = start.format('DD MMMM YYYY')
+      //     eventData.start = start.format('HH:mm')
+      //     eventData.end = end.format('HH:mm')
+      //   }
+      //   this.eventData[event] = eventData
+      // })
     },
   },
   mounted () {

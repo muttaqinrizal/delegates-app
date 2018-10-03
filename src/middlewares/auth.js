@@ -11,6 +11,10 @@ export default {
     
     if (token) {
       store.commit('setHasNotif', await localForage.getItem('notif'))
+      var roles = await localForage.getItem('roles')
+      console.log(roles);
+    
+      if (roles.indexOf('RANGER') >= 0) store.commit('setIsRanger', true)
       axios.defaults.headers.common['Authorization'] = `bearer ${token}`
       next()
     }

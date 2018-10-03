@@ -40,7 +40,7 @@
             <v-list-tile
               :key="item._id"
               avatar
-              @click="$router.push('/announcement/' + item._id)"
+              @click="$router.push('/announcement/detail?id=' + item._id)"
             >
               <v-list-tile-avatar>
                 <v-icon>notifications</v-icon>

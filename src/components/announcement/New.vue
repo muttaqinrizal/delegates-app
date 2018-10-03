@@ -1,7 +1,12 @@
 <template>
   <v-container fluid grid-list-lg>
     <v-flex xs12>
-      <v-card>
+      <v-progress-circular
+        v-if="isLoading"
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+      <v-card v-else>
         <v-container fluid grid-list-lg>
           <v-form v-model="valid" ref="form">
             <v-layout row>
@@ -72,7 +77,7 @@
             </v-layout>
             <v-layout row>
               <v-flex>
-                <v-btn :disabled="isLoading" @click="saveAnnouncement" color="primary">{{isLoading ? 'Menyimpan..' : 'Simpan'}}</v-btn>
+                <v-btn :disabled="saveLoading" :loading="saveLoading" @click="saveAnnouncement" color="primary">Simpan</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -104,6 +109,7 @@ export default {
       images: [],
       valid: false,
       isLoading: false,
+      saveLoading: false,
     }
   },
   methods: {
@@ -114,7 +120,7 @@ export default {
     saveAnnouncement () {
       this.$validator.validate().then(valid => {
         if (valid) {
-          this.isLoading = true
+          this.saveLoading = true
           var data = new FormData()
           if (this.images) {
             this.images.forEach(image => {
@@ -132,18 +138,31 @@ export default {
           .then(response => {
             console.log(response.data);
             this.notify({message: 'Pengumuman terkirim', type: 'success'})
-            this.isLoading = false
+            this.saveLoading = false
             this.$router.replace('/announcement')
           })
           .catch(err => {
-            this.isLoading = false
+            this.saveLoading = false
             console.log(err);
             this.notify({message: err.message, type: 'error'})
           })
         }
       })
     },
-    compiledMarkdown: function () {
+    loadRoomList () {
+      this.isLoading = true
+      axios({
+        url: `${this.$config.apiBaseUrl}/api/user/rooms`,
+      }).then(response => {
+        this.scopes = response.data
+        this.scopes.push('semua')
+        this.isLoading = false
+      }).catch(error => {
+        this.isLoading = false
+        console.log('[X]', error.message);
+      })
+    },
+    compiledMarkdown () {
       this.compiledContent = marked(this.content, { sanitize: true })
     },
   },
@@ -162,6 +181,7 @@ export default {
     this.$store.commit('setHeaderTitle', 'Pengumuman')
     // this.$store.commit('setActiveNavigation', 'announcement')
     this.$store.commit('setShowBackBtn', true)
+    this.loadRoomList()
     
   },
   destroyed () {

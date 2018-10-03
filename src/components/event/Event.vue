@@ -90,7 +90,7 @@
         </v-layout>
         <v-dialog v-model="showDelete" persistent max-width="290">
           <v-card>
-            <v-card-title class="headline">Hapus Event?</v-card-title>
+            <v-card-title class="headline">Hapus event?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" :disabled="deleteLoading" @click.native="closeDelete()">Batal</v-btn>
