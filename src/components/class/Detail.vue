@@ -62,7 +62,6 @@
                   <v-icon color="green">edit</v-icon>
                 </v-btn>
               </template>
-              <v-btn outline color="orange" @click="$router.push('/class/'+classData._id)">Detail</v-btn>
               <v-btn
                 v-if="!registered && !isRanger"
                 :disabled="(classData.max - classData.participants.length) <= 0 || registering || !isClassOpen"
