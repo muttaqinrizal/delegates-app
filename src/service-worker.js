@@ -41,20 +41,22 @@ self.addEventListener('install', function (event) {
   event.waitUntil(precache().then(function () {
     // console.log('[PWA Builder] Skip waiting on install');
     console.log('[*] all files are cached. Installed.');
-    // return self.skipWaiting();
+    return self.skipWaiting();
     
   }));
 });
 
 //allow sw to control of current page
 self.addEventListener('activate', function (event) {
-  console.log('[*] Claiming clients for current page');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       var toBeDeleted = cacheNames.filter(cache => cache !== CACHE)
       return Promise.all(toBeDeleted.map(cache => {
         return caches.delete(cache)
-      }))
+      })).then(() => {
+        console.log('[*] Claiming clients for current page');
+        return self.clients.claim();
+      })
     })
   )
 });
