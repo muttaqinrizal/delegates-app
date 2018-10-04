@@ -55,7 +55,7 @@ self.addEventListener('activate', function (event) {
         return caches.delete(cache)
       })).then(() => {
         console.log('[*] Claiming clients for current page');
-        return self.clients.claim();
+        // return self.clients.claim();
       })
     })
   )
