@@ -21,7 +21,7 @@ import localForage from 'localforage'
 let assetsToCache = [
   ...serviceWorkerOption.assets,
   '/',
-  '/announcement/detail'
+  '/announcement'
   // '/css/roboto.css',
   // '/fonts/material-icon.woff2',
   // '/fonts/roboto-v18-latin-300.woff',
@@ -140,7 +140,7 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
   console.log('notif clicked');
   if (Notification.prototype.hasOwnProperty('data')) {
-    console.log('using data');
+    console.log('using data', event.notification);
     var url = event.notification.data.url
     event.waitUntil(clients.openWindow(url))
   }

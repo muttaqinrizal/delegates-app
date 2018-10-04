@@ -108,8 +108,13 @@ export default {
         }
         this.loginLoading = false
       } catch (error) {
-        console.log(error)
-        this.loginLoading = true
+        this.loginLoading = false
+        if (error.response) {
+          if (error.response.status === 400) {
+            this.notify({message: 'Data login salah', type: 'error'})
+            return
+          }
+        }
         this.notify({message: error.message, type: 'error'})
       }
     },

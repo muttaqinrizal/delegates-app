@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
+const stamp = new Date().getTime()
+
 module.exports = {
   entry: {
     commons: [
@@ -22,8 +24,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
-    filename: '[name].js',
-    chunkFilename: '[name].js'
+    filename: '[name].[hash].js',
+    chunkFilename: '[name].[hash].js'
   },
   module: {
     rules: [
@@ -51,7 +53,7 @@ module.exports = {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: 'images/[name].[ext]'
+          name: 'images/[name].[hash].[ext]'
         }
       }
     ]
@@ -103,7 +105,7 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       },
       'ENVIRONMENT': '"production"',
-      'BUILDSTAMP': new Date().getTime()
+      'BUILDSTAMP': stamp
     }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
@@ -123,7 +125,7 @@ else {
         NODE_ENV: '"development"'
       },
       'ENVIRONMENT': '"development"',
-      'BUILDSTAMP': new Date().getTime()
+      'BUILDSTAMP': stamp
     })
   ])
 }

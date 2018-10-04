@@ -49,7 +49,7 @@
             </v-card-text>
             <v-card-actions>
               <!-- TODO: action button-->
-              <div style="margin-left: 8px" v-if="classData.participants.indexOf(me) >= 0">
+              <div style="margin-left: 8px" v-if="registered">
                 <v-icon color="green">check_circle</v-icon>
                 <span>Terdaftar</span>
               </div>
@@ -231,15 +231,18 @@
     computed: {
       registered () {
         if (this.classData) {
-          console.log(this.classData);
-          
-          if (this.classData.participants.indexOf(this.me) >= 0) {
+          var regs = this.classData.participants.find(participant => {
+            return participant._id === this.me
+          })
+          if (regs) {
+            console.log('sudah terdaftar di kelas', this.classData.name);
             return true
           }
           else {
             return false
           }
         }
+        else return false
       },
     },
     mounted () {
