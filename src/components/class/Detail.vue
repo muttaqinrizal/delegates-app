@@ -54,7 +54,7 @@
                 <span>Terdaftar</span>
               </div>
               <v-spacer></v-spacer>
-              <template v-if="isRanger">
+              <template v-if="$store.state.isRanger">
                 <v-btn icon @click="deleteDialog(classData._id)">
                   <v-icon color="red">delete_forever</v-icon>
                 </v-btn>
@@ -63,8 +63,9 @@
                 </v-btn>
               </template>
               <v-btn
-                v-if="!registered && !isRanger"
+                v-if="!registered && !$store.state.isRanger"
                 :disabled="(classData.max - classData.participants.length) <= 0 || registering || !isClassOpen"
+                :loading="registering"
                 color="primary"
                 @click="registerClass(classData._id)"
               >
@@ -91,6 +92,7 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
   import axios from 'axios'
   import marked from 'marked'
   import localForage from 'localforage'
@@ -103,7 +105,6 @@
         isLoading: true,
         loadingFailed: false,
         me: '',
-        isRanger: false,
         registering: false,
         isClassOpen: false,
         deleteId: null,
@@ -112,6 +113,7 @@
       }
     },
     methods: {
+      ...mapActions(['notify']),
       getApiPicture(name) {
         return commons.getApiPicture(name)
       },
@@ -212,10 +214,14 @@
           url: `${this.$config.apiBaseUrl}/api/class/setting`
         })
         .then(response => {
-          this.isClassOpen = response.data.value
+          this.isClassOpen = JSON.parse(JSON.stringify(response.data.value))
+          classStorage.setItem('isClassOpen', response.data.value)
         })
         .catch(error => {
-          this.notify({message: error.message, type: 'error'})
+          classStorage.getItem('isClassOpen').then(value => {
+            this.isClassOpen = value
+          })
+          console.log(error.message);
         })
       }
     },
@@ -243,9 +249,10 @@
       localForage.getItem('apiUserId').then(id => {
         this.me = id
       })
-      localForage.getItem('roles').then(roles => {
-        if(roles.indexOf('RANGER') >= 0) this.isRanger = true
-      })
+      // localForage.getItem('roles').then(roles => {
+      //   if(roles.indexOf('RANGER') >= 0) this.isRanger = true
+      //   else this.isRanger = true
+      // })
     },
     destroyed () {
       this.$store.commit('setShowBackBtn', false)

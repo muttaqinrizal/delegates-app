@@ -89,7 +89,7 @@
                 <span>Terdaftar</span>
               </div>
               <v-spacer></v-spacer>
-              <template v-if="isRanger">
+              <template v-if="$store.state.isRanger">
                 <v-btn icon @click="deleteDialog(item._id)">
                   <v-icon color="red">delete_forever</v-icon>
                 </v-btn>
@@ -99,7 +99,7 @@
               </template>
               <v-btn outline color="orange" @click="$router.push('/class/'+item._id)">Detail</v-btn>
               <v-btn
-                v-if="!registered && !isRanger"
+                v-if="!registered && !$store.state.isRanger"
                 :disabled="(item.max - item.participants.length) <= 0 || registering || !isClassOpen"
                 color="primary"
                 @click="registerClass(item._id)"
@@ -169,12 +169,11 @@ export default {
   name: 'Class',
   data () {
     return {
-      classData: [],
+      classData: {},
       isLoading: true,
       registering: false,
       loadingFailed: false,
       me: '',
-      isRanger: false,
       deleteId: null,
       showDelete: false,
       deleteLoading: false,
@@ -192,17 +191,17 @@ export default {
       axios.get(`${this.$config.apiBaseUrl}/api/class`)
       .then(response => {
         console.log('from network', response.data);
-        this.classData = response.data
+        this.classData = JSON.parse(JSON.stringify(response.data))
         classStorage.setItem('index', response.data)
         this.isLoading = false
+        this.getToggleClass()
       })
       .catch(err => {
         this.isLoading = false
         classStorage.getItem('index')
         .then(data => {
           if(data) {
-            this.classData = data.class
-            this.registered = data.registered
+            this.classData = data
             console.log('from IndexedDb', data);
           }
           else {
@@ -210,9 +209,6 @@ export default {
           }
         })
         console.log(err);
-      })
-      localForage.getItem('apiUserId').then(id => {
-        this.me = id
       })
     },
     registerClass(id) {
@@ -286,10 +282,14 @@ export default {
         url: `${this.$config.apiBaseUrl}/api/class/setting`
       })
       .then(response => {
-        this.isClassOpen = response.data.value
+        this.isClassOpen = JSON.parse(JSON.stringify(response.data.value))
+        classStorage.setItem('isClassOpen', response.data.value)
       })
       .catch(error => {
-        this.notify({message: error.message, type: 'error'})
+        classStorage.getItem('isClassOpen').then(value => {
+          this.isClassOpen = value
+        })
+        console.log(error.message);
       })
     }
   },
@@ -314,11 +314,14 @@ export default {
     this.loadingFailed = false
     // this.$store.commit('setActiveNavigation', 'a')
     this.loadClassData()
-    this.getToggleClass()
-    //isRanger
-    localForage.getItem('roles').then(roles => {
-      if(roles.indexOf('RANGER') >= 0) this.isRanger = true
+    localForage.getItem('apiUserId').then(id => {
+      this.me = id
     })
+    //isRanger
+    // localForage.getItem('roles').then(roles => {
+    //   if(roles.indexOf('RANGER') >= 0) this.isRanger = true
+    //   else this.isRanger = true
+    // })
   }
 }
 </script>

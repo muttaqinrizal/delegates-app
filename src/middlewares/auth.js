@@ -15,6 +15,8 @@ export default {
       console.log(roles);
     
       if (roles.indexOf('RANGER') >= 0) store.commit('setIsRanger', true)
+      else store.commit('setIsRanger', false)
+      
       axios.defaults.headers.common['Authorization'] = `bearer ${token}`
       next()
     }
