@@ -84,7 +84,7 @@ export default {
               'Authorization': 'Bearer ' + login.data.token
             }
           })
-          // console.log(login)
+          console.log(userBackendData.data)
           await localForage.setItem('authToken', login.data.token)
           await localForage.setItem('userEmail', userData.data.user.email)
           await localForage.setItem('userName', userData.data.user.info.fullName)
@@ -98,17 +98,18 @@ export default {
           await localForage.setItem('roles', roles)
           await localForage.setItem('userRoom', rooms)
           await localForage.setItem('loginStamp', userData.data.user.email + '-' + new Date().getTime())
-          this.setLogedIn(true)
           // subscribe notif if already granted
           if (Notification.permission === 'granted') {
             common.pushSubscribe()
           }
+          this.setLogedIn(true)
           if (this.$route.query.redirect) this.$router.replace({path: this.$route.query.redirect})
           else this.$router.replace({path: '/'})
         }
         this.loginLoading = false
       } catch (error) {
         console.log(error)
+        this.loginLoading = true
         this.notify({message: error.message, type: 'error'})
       }
     },
