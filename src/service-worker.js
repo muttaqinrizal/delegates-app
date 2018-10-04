@@ -41,7 +41,7 @@ self.addEventListener('install', function (event) {
   event.waitUntil(precache().then(function () {
     // console.log('[PWA Builder] Skip waiting on install');
     console.log('[*] all files are cached. Installed.');
-    return self.skipWaiting();
+    // return self.skipWaiting();
     
   }));
 });
