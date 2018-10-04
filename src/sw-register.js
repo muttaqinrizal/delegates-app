@@ -5,8 +5,8 @@ if (ENVIRONMENT === 'production') setting = config.production
 
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js', {
-    scope: './'
+  navigator.serviceWorker.register('/sw.js', {
+    scope: '/'
   }).then(function (registration) {
     // var serviceWorker;
     if (registration.installing) {
