@@ -35,6 +35,13 @@
           </div>
         </v-flex>
       </v-layout>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <div class="grey--text caption">
+            Build stamp: {{buildStamp}}
+          </div>
+        </v-flex>
+      </v-layout>
     </v-container>
   </v-card>
 </template>
@@ -49,7 +56,8 @@ export default {
         email: '',
         room: '',
       },
-      logoutLoading: false
+      logoutLoading: false,
+      buildStamp: BUILDSTAMP
     }
   },
   methods: {
