@@ -12,10 +12,10 @@ const EventDetail = () => import(/* webpackChunkName: "event" */ '../components/
 const Announcement = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/Default.vue');
 const AnnouncementDetail = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/Detail.vue');
 const AnnouncementNew = () => import(/* webpackChunkName: "announcement" */ '../components/announcement/New.vue');
-const Class = () => import(/* webpackChunkName: "event" */ '../components/class/Class.vue');
-const ClassNew = () => import(/* webpackChunkName: "event" */ '../components/class/New.vue');
-const ClassEdit = () => import(/* webpackChunkName: "event" */ '../components/class/Edit.vue');
-const ClassDetail = () => import(/* webpackChunkName: "event" */ '../components/class/Detail.vue');
+const Class = () => import(/* webpackChunkName: "class" */ '../components/class/Class.vue');
+const ClassNew = () => import(/* webpackChunkName: "class" */ '../components/class/New.vue');
+const ClassEdit = () => import(/* webpackChunkName: "class" */ '../components/class/Edit.vue');
+const ClassDetail = () => import(/* webpackChunkName: "class" */ '../components/class/Detail.vue');
 Vue.use(Router)
 
 export default new Router({

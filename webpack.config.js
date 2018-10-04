@@ -24,8 +24,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
-    filename: '[name].[hash].js',
-    chunkFilename: '[name].[hash].js'
+    filename: '[name].' + stamp + '.js',
+    chunkFilename: '[name].' + stamp + '.js'
   },
   module: {
     rules: [
@@ -53,7 +53,7 @@ module.exports = {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: 'images/[name].[hash].[ext]'
+          name: 'images/[name].' + stamp + '.[ext]'
         }
       }
     ]
@@ -72,8 +72,8 @@ module.exports = {
       entry: path.resolve(__dirname, 'src/service-worker.js')
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "commons",
-      filename: "commons.js",
+      name: 'commons',
+      filename: 'commons.' + stamp + '.js',
     })
 
   ],
