@@ -32,6 +32,10 @@ let assetsToCache = [
   // '/fonts/roboto-v18-latin-regular.woff',
   // '/fonts/roboto-v18-latin-regular.woff2',
 ]
+assetsToCache = serviceWorkerOption.assets.filter(asset => { 
+  //exclude inex and manifest
+  return ['/index.html', '/manifest.json'].indexOf(asset) < 0 
+})
 
 
 self.addEventListener('install', function (event) {
