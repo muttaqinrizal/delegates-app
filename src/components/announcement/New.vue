@@ -77,7 +77,7 @@
             </v-layout>
             <v-layout row>
               <v-flex>
-                <v-btn :disabled="saveLoading" :loading="saveLoading" @click="saveAnnouncement" color="primary">Simpan</v-btn>
+                <v-btn :disabled="saveLoading" :loading="saveLoading" @click="saveAnnouncement" color="primary">Kirim</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
