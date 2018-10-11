@@ -126,6 +126,10 @@ else {
       },
       'ENVIRONMENT': '"development"',
       'BUILDSTAMP': stamp
-    })
+    }),
+    new CopyWebpackPlugin([
+      { from: 'test' },
+      { from: 'test/example-resource.txt', to: './' },
+    ]),
   ])
 }

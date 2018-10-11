@@ -22,7 +22,7 @@
         fluid
         style="min-height: 0;"
         grid-list-lg>
-        <!-- <div class="card" v-if="!isOnline">Offline mode</div> -->
+        <div class="card" v-if="isOffline">Offline data</div>
         <v-layout row wrap>
           <template>
             <v-container v-if="isLoading" class="text-xs-center">
@@ -135,12 +135,13 @@ export default {
       deleteId: null,
       showDelete: false,
       deleteLoading: false,
+      isOffline: false
     }
   },
   computed: {
-    isOnline () {
-      return navigator.onLine
-    },
+    // isOnline () {
+    //   return navigator.onLine
+    // },
   },
   methods: {
     ...mapActions(['notify']),
@@ -152,9 +153,11 @@ export default {
         eventStorage.setItem('index', response.data)
         this.rawEventData = JSON.parse(JSON.stringify(response.data))
         this.isLoading = false
+        this.isOffline = false
       })
       .catch(err => {
         this.isLoading = false
+        this.isOffline = true
         eventStorage.getItem('index')
         .then(data => {
           if(data) {

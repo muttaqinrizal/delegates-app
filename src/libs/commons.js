@@ -32,7 +32,8 @@ let commons = {
     var name = await localForage.getItem('userName') || ''
     var email = await localForage.getItem('userEmail') || ''
     var room = await localForage.getItem('userRoom') || ''
-    return {name, email, room}
+    var avatar = await localForage.getItem('avatar') || '/images/logo.png'
+    return {name, email, room, avatar}
   },
   pushSubscribe() {
     navigator.serviceWorker.ready.then((registration) => {

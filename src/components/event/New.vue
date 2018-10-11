@@ -18,7 +18,7 @@
               </v-flex>
             </v-layout>
             <v-layout>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <v-dialog
                   ref="dialog"
                   v-model="showDatepicker"
@@ -49,7 +49,7 @@
               </v-flex>
             </v-layout>
             <v-layout row>
-              <v-flex xs11 sm5>
+              <v-flex xs6>
                 <v-dialog
                   ref="startTimeDialog"
                   v-model="showStart"
@@ -82,7 +82,7 @@
                   </v-time-picker>
                 </v-dialog>
               </v-flex>
-              <v-flex xs11 sm5>
+              <v-flex xs6>
                 <v-dialog
                   ref="endTimeDialog"
                   v-model="showEnd"

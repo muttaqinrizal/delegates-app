@@ -13,7 +13,7 @@
             </v-card-title>
           </v-card> -->
           <v-avatar :size="128">
-            <img :src="getPicture('logo.png')" alt="" srcset="">
+            <img :src="user.avatar" alt="" srcset="">
           </v-avatar>
           <div>
             {{user.name}}
@@ -55,6 +55,7 @@ export default {
         name: '',
         email: '',
         room: '',
+        avatar: ''
       },
       logoutLoading: false,
       buildStamp: BUILDSTAMP
@@ -86,6 +87,7 @@ export default {
       this.user.name = user.name
       this.user.email = user.email
       this.user.room = user.room
+      this.user.avatar = user.avatar
     })
   },
   mounted: function(){

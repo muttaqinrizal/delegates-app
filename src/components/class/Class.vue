@@ -33,6 +33,7 @@
           </v-list-tile>
         </v-list>
       </v-card>
+      <div class="card pt-2" v-if="isOffline">Offline data</div>
       <v-container v-if="isLoading">
         <v-progress-circular
           indeterminate
@@ -68,7 +69,7 @@
                   </div>
                 </v-card-text>
                 <v-card-text class="text-xs-left">
-                  <div>{{item.panelist}}</div>
+                  <div>Panelis: {{item.panelist}}</div>
                   <div v-if="(item.max - item.participants.length) > 0">Sisa kuota: {{item.max - item.participants.length}}</div>
                   <div v-else>
                     <v-icon color="orange">info</v-icon>
@@ -180,6 +181,7 @@ export default {
       isClassOpen: false,
       toggleLoading: false,
       showToggle: false,
+      isOffline: false,
     }
   },
   methods: {
@@ -190,6 +192,7 @@ export default {
       this.isLoading = true
       axios.get(`${this.$config.apiBaseUrl}/api/class`)
       .then(response => {
+        this.isOffline = false
         console.log('from network', response.data);
         this.classData = JSON.parse(JSON.stringify(response.data))
         classStorage.setItem('index', response.data)
@@ -197,6 +200,7 @@ export default {
         this.getToggleClass()
       })
       .catch(err => {
+        this.isOffline = true
         this.isLoading = false
         classStorage.getItem('index')
         .then(data => {

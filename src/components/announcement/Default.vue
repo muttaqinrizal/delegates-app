@@ -22,7 +22,12 @@
             <v-divider/>
             <v-divider/>
           </template>
-          <v-subheader>Semua Pengumuman</v-subheader>
+          <v-subheader>
+            Semua Pengumuman 
+            <template v-if="isOffline">
+              (Offline data)
+            </template>
+          </v-subheader>
           <template v-if="isLoading">
             <v-progress-circular
               indeterminate
@@ -72,6 +77,7 @@ export default {
       announcementData: [],
       isLoading: true,
       loadingFailed: false,
+      isOffline: false,
     }
   },
   methods: {
@@ -80,12 +86,14 @@ export default {
       this.loadingFailed = false
       axios.get(`${this.$config.apiBaseUrl}/api/announcement`)
       .then(response => {
+        this.isOffline = false
         console.log('from network', response.data);
         this.announcementData = response.data
         anncStorage.setItem('index', response.data)
         this.isLoading = false
       })
       .catch(err => {
+        this.isOffline = true
         this.isLoading = false
         anncStorage.getItem('index')
         .then(data => {

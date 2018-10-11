@@ -22,6 +22,9 @@
         <v-divider></v-divider>
         <div style="margin-bottom: 24px;"></div>
         <div class="preview-md" v-html="announcementData.content"></div>
+        <div style="margin-bottom: 24px;"></div>
+        <v-divider></v-divider>
+        <div v-if="$store.state.isRanger">Author: {{announcementData.author.name}}</div>
 
       </v-card-text>
       <v-layout row wrap class="ma-1">

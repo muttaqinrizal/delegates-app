@@ -31,6 +31,14 @@
                     {{classData.name}}
                   </div>
                 </v-card-title>
+                <v-card-text class="text-xs-left text-sm-left">
+                <div>Panelis: {{classData.panelist}}</div>
+                <div>Peserta: {{classData.participants.length}}/{{classData.max}}</div>
+                <div>Tempat: {{classData.location}}</div>
+                <v-divider></v-divider>
+                <div style="margin-bottom: 24px;"></div>
+                <div class="preview-md" v-html="classData.description"></div>
+              </v-card-text>
               </v-flex>
               <v-flex xs4 sm2 md2 lg2>
                 <div class="pa-2">
@@ -39,16 +47,8 @@
                 </div>
               </v-flex>
             </v-layout>
-            <v-card-text class="text-xs-left text-sm-left">
-              <div>Panelis: {{classData.panelist}}</div>
-              <div>Peserta: {{classData.participants.length}}/{{classData.max}}</div>
-              <div>Tempat: {{classData.location}}</div>
-              <v-divider></v-divider>
-              <div style="margin-bottom: 24px;"></div>
-              <div class="preview-md" v-html="classData.description"></div>
-            </v-card-text>
+            
             <v-card-actions>
-              <!-- TODO: action button-->
               <div style="margin-left: 8px" v-if="registered">
                 <v-icon color="green">check_circle</v-icon>
                 <span>Terdaftar</span>
@@ -58,7 +58,7 @@
                 <v-btn icon @click="deleteDialog(classData._id)">
                   <v-icon color="red">delete_forever</v-icon>
                 </v-btn>
-                <v-btn icon @click="$router.push(`/event/edit/${classData._id}`)">
+                <v-btn icon @click="$router.push(`/class/edit/${classData._id}`)">
                   <v-icon color="green">edit</v-icon>
                 </v-btn>
               </template>

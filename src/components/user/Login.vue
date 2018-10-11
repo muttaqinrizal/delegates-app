@@ -84,10 +84,11 @@ export default {
               'Authorization': 'Bearer ' + login.data.token
             }
           })
-          console.log(userBackendData.data)
+          console.log(userData.data)
           await localForage.setItem('authToken', login.data.token)
           await localForage.setItem('userEmail', userData.data.user.email)
           await localForage.setItem('userName', userData.data.user.info.fullName)
+          await localForage.setItem('avatar', userData.data.user.info.avatar)
           await localForage.setItem('apiUserId', userBackendData.data._id || null)
           var roles = [], rooms = []
           userData.data.user.roles.forEach(item => {

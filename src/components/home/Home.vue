@@ -13,6 +13,9 @@
         </v-card>
       </v-flex>
       <v-flex>
+        <div class="card" v-if="isOffline">Offline data</div>
+      </v-flex>
+      <v-flex>
         <div class="text-xs-left mb-2 title">Acara</div>
       </v-flex>
       <template v-if="!isLoading">
@@ -125,6 +128,7 @@ export default {
       rawEventData: {},
       isLoading: true,
       temp: [],
+      isOffline: false,
     }
   },
   methods: {
@@ -146,12 +150,14 @@ export default {
       this.loadingFailed = false
       axios.get(`${this.$config.apiBaseUrl}/api/event`)
       .then(response => {
+        this.isOffline = false
         console.log('from network', response.data);
         eventStorage.setItem('index', response.data)
         this.rawEventData = JSON.parse(JSON.stringify(response.data))
         this.isLoading = false
       })
       .catch(err => {
+        this.isOffline = true
         this.isLoading = false
         eventStorage.getItem('index')
         .then(data => {

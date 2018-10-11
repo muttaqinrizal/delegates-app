@@ -8,6 +8,7 @@ const strategies = {
 const FRONTEND = /((https\:\/\/fls\.nurulirfan\.com)|(http:\/\/localhost:3000))(?!.*sockjs-node)./
 const API_ASSETS = /(?=.*\/api\/static\/)(?!.*hires).*/
 const CONTENT = /\/api\/((?!static))/
+const TEST = /\/test/
 const origins = [
   'https://apifls.nurulirfan.com',
   'http://localhost:8080',
@@ -163,7 +164,10 @@ function whichStrategies (event) {
   var isOriginAllowed = origins.indexOf(url.origin) >= 0
   
   if(isGET && isOriginAllowed) {
-    if (FRONTEND.test(url.href)) {
+    if (TEST.test(url.href)) {
+      return strategies.NETWORK_ONLY
+    }
+    else if (FRONTEND.test(url.href)) {
       return strategies.CACHE_FALLING_BACK_TO_NETWORK
     }
     else if (API_ASSETS.test(url.pathname)) { // use network first
