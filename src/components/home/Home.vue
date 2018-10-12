@@ -30,7 +30,7 @@
           <v-btn color="primary" @click="loadAnnouncementData()">Muat ulang</v-btn>
         </v-container>
         <v-container v-else-if="announcementData === null">
-          <div>Tidak ada acara mendatang</div>
+          <div>Belum ada pengumuman</div>
         </v-container>
         <v-card v-else color="gray darken-2">
           <v-container fluid grid-list-lg>
