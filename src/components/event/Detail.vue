@@ -46,6 +46,7 @@
       </v-card-text>
       <template v-if="$store.state.isRanger">
         <v-card-actions>
+          <v-spacer></v-spacer>
           <v-btn icon @click="deleteDialog(eventData._id)">
             <v-icon color="red">delete_forever</v-icon>
           </v-btn>
@@ -61,7 +62,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" :disabled="deleteLoading" @click.native="closeDelete()">Batal</v-btn>
-          <v-btn color="error" :loading="deleteLoading" outline flat @click.native="deleteClass()">Hapus</v-btn>
+          <v-btn color="error" :loading="deleteLoading" outline flat @click.native="deleteEvent()">Hapus</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
