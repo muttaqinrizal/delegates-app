@@ -48,7 +48,7 @@
         <p>Belum ada kelas</p>
       </v-container>
       <template v-else>
-        <v-container v-if="!isClassOpen">
+        <v-container v-if="!isClassOpen && !$store.state.isRanger">
           <v-card color="blue-grey darken-2" class="white--text">
             <v-card-title>
               Kelas belum dibuka

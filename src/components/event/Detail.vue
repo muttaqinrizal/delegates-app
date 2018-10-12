@@ -44,7 +44,27 @@
           </v-layout>
         </v-container>
       </v-card-text>
+      <template v-if="$store.state.isRanger">
+        <v-card-actions>
+          <v-btn icon @click="deleteDialog(eventData._id)">
+            <v-icon color="red">delete_forever</v-icon>
+          </v-btn>
+          <v-btn icon @click="$router.push(`/event/e  dit/${eventData._id}`)">
+            <v-icon color="green">edit</v-icon>
+          </v-btn>
+        </v-card-actions>     
+      </template>
     </v-card>
+    <v-dialog v-model="showDelete" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">Hapus acara?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" :disabled="deleteLoading" @click.native="closeDelete()">Batal</v-btn>
+          <v-btn color="error" :loading="deleteLoading" outline flat @click.native="deleteClass()">Hapus</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -64,7 +84,10 @@
         eventData: {},
         isLoading: true,
         loadingFailed: false,
-        compiledDesc: ''
+        compiledDesc: '',
+        deleteId: null,
+        showDelete: false,
+        deleteLoading: false,
       }
     },
     methods: {
@@ -98,6 +121,35 @@
       compileMarkdown: function () {
         this.compiledDesc = marked(this.eventData.description, { sanitize: true })
       },
+      deleteDialog(id) {
+        this.deleteId = id
+        this.showDelete = true
+      },
+      closeDelete() {
+        this.deleteId = null
+        this.showDelete = false
+      },
+      deleteEvent () {
+        this.deleteLoading = true
+        axios({
+          method: 'delete',
+          url: `${this.$config.apiBaseUrl}/api/event/delete`,
+          data: {
+            id: this.deleteId
+          }
+        })
+        .then(response => {
+          this.deleteLoading = false
+          this.closeDelete()
+          this.$router.replace('/event')
+          this.notify({message: 'Acara dihapus', type: 'success'})
+        })
+        .catch(error => {
+          this.deleteLoading = false
+          this.closeDelete()
+          this.notify({message: error.message, type: 'error'})
+        })
+      },
     },
     watch: {
       rawEventData (val) {
@@ -115,6 +167,7 @@
     mounted () {
       this.loadEventData()
       this.$store.commit('setShowBackBtn', true)
+      this.$store.commit('setActiveNavigation', 'event')
     },
     destroyed () {
       this.$store.commit('setShowBackBtn', false)

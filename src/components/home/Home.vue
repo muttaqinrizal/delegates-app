@@ -54,7 +54,7 @@
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn outline small @click="$router.push(`/announcement/detail?id=${announcementData._id}`)">Detail</v-btn>
+            <v-btn color="primary" outline small @click="$router.push(`/announcement/detail?id=${announcementData._id}`)">Detail</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -97,7 +97,7 @@
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn outline small @click="$router.push(`/event/${eventData.now._id}`)">Detail</v-btn>
+              <v-btn color="primary" outline small @click="$router.push(`/event/${eventData.now._id}`)">Detail</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -134,7 +134,7 @@
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn outline small @click="$router.push(`/event/${eventData.next._id}`)">Detail</v-btn>
+              <v-btn color="primary" outline small @click="$router.push(`/event/${eventData.next._id}`)">Detail</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
