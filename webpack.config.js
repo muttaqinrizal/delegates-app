@@ -129,7 +129,6 @@ else {
     }),
     new CopyWebpackPlugin([
       { from: 'test' },
-      { from: 'test/example-resource.txt', to: './' },
     ]),
   ])
 }

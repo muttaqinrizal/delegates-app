@@ -13,9 +13,10 @@
             </v-card-title>
           </v-card> -->
           <v-avatar :size="128">
-            <img :src="user.avatar" alt="" srcset="">
+            <!-- <img :src="user.avatar" alt="" srcset=""> -->
+            <v-img lazy-src="/images/logo.png" :src="user.avatar"></v-img>
           </v-avatar>
-          <div>
+          <div class="pt-4">
             {{user.name}}
           </div>
           <div>

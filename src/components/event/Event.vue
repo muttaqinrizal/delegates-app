@@ -27,7 +27,6 @@
           <template>
             <v-container v-if="isLoading" class="text-xs-center">
               <v-progress-circular
-                :width="6"
                 indeterminate
                 color="primary">
               </v-progress-circular>

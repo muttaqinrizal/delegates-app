@@ -16,7 +16,50 @@
         <div class="card" v-if="isOffline">Offline data</div>
       </v-flex>
       <v-flex>
-        <div class="text-xs-left mb-2 title">Acara</div>
+        <div class="text-xs-left mb-2 title">Pengumuman terbaru</div>
+      </v-flex>
+      <v-flex>
+        <v-container v-if="anncLoading">
+          <v-progress-circular
+            indeterminate
+            color="primary">
+          </v-progress-circular>
+        </v-container>
+        <v-container v-else-if="anncFailed">
+          <p>Gagal memuat pengumuman terbaru</p>
+          <v-btn color="primary" @click="loadAnnouncementData()">Muat ulang</v-btn>
+        </v-container>
+        <v-container v-else-if="announcementData === null">
+          <div>Tidak ada acara mendatang</div>
+        </v-container>
+        <v-card v-else color="gray darken-2">
+          <v-container fluid grid-list-lg>
+            <v-layout row wrap>
+              <v-flex d-flex xs2>
+                <v-icon large>
+                  notifications
+                </v-icon>
+              </v-flex>
+              <v-flex xs10 class="text-xs-left">
+                <div class="pl-2">
+                  <div class="mb-1">
+                    <strong>{{announcementData.title}}</strong>
+                  </div>
+                  <div>
+                    {{dayjs(announcementData.createdAt).fromNow()}}
+                  </div>
+                </div>
+              </v-flex>
+            </v-layout>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn outline small @click="$router.push(`/announcement/detail?id=${announcementData._id}`)">Detail</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <div class="text-xs-left mb-2 mt-3 title">Acara</div>
       </v-flex>
       <template v-if="!isLoading">
         <v-flex v-if="!eventData.now && !eventData.next">
@@ -109,9 +152,12 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
+import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(isBetween)
+dayjs.extend(relativeTime)
 import localForage from 'localforage'
 var eventStorage = localForage.createInstance({name: 'events'})
+var anncStorage = localForage.createInstance({name: 'announcements'})
 import '../../styles/timeline.css'
 import common from '../../libs/commons'
 export default {
@@ -129,6 +175,9 @@ export default {
       isLoading: true,
       temp: [],
       isOffline: false,
+      announcementData: null,
+      anncLoading: true,
+      anncFailed: false,
     }
   },
   methods: {
@@ -172,6 +221,26 @@ export default {
         console.error(err);
       })
     },
+    loadAnnouncementData () {
+      axios.get(`${this.$config.apiBaseUrl}/api/announcement/latest`)
+      .then(response => {
+        this.anncLoading = false
+        this.announcementData = JSON.parse(JSON.stringify(response.data))
+        anncStorage.setItem('latest', response.data)
+        anncStorage.setItem(response.data._id, response.data)
+      })
+      .catch(error => {
+        this.anncLoading = false
+        anncStorage.getItem('latest').then(data => {
+          if(data) {
+            this.announcementData = data
+          }
+          else {
+            this.anncFailed = true
+          }
+        })
+      })
+    }
   },
   watch: {
     rawEventData (events) {
@@ -242,6 +311,10 @@ export default {
     this.$store.commit('setActiveNavigation', 'home')
     this.subscription = Notification.permission
     this.loadEventData()
+    this.loadAnnouncementData()
+  },
+  created () {
+    this.dayjs = dayjs
   }
 }
 </script>
