@@ -227,7 +227,7 @@ export default {
         this.anncLoading = false
         this.announcementData = JSON.parse(JSON.stringify(response.data))
         anncStorage.setItem('latest', response.data)
-        anncStorage.setItem(response.data._id, response.data)
+        if (response.data !== null) anncStorage.setItem(response.data._id, response.data)
       })
       .catch(error => {
         this.anncLoading = false
