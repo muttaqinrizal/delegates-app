@@ -50,7 +50,7 @@
           <v-btn icon @click="deleteDialog(eventData._id)">
             <v-icon color="red">delete_forever</v-icon>
           </v-btn>
-          <v-btn icon @click="$router.push(`/event/e  dit/${eventData._id}`)">
+          <v-btn icon @click="$router.push(`/event/edit/${eventData._id}`)">
             <v-icon color="green">edit</v-icon>
           </v-btn>
         </v-card-actions>     
