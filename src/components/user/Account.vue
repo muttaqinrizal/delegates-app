@@ -24,7 +24,7 @@
           </div>
           <div v-if="user.room.length > 0">
             Room:
-            <span v-for="room in user.room">{{room}} </span>
+            <span v-for="room in user.room">{{room.toLowerCase().replace('-', ' ')}} </span>
           </div>
           <div v-else>
             Ranger

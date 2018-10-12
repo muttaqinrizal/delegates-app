@@ -167,7 +167,7 @@ export default {
           })
           .then(response => {
             console.log(response.data);
-            this.notify({message: 'Pengumuman terkirim', type: 'success'})
+            this.notify({message: 'Kelas tersimpan', type: 'success'})
             this.isLoading = false
             this.$router.replace('/class')
           })

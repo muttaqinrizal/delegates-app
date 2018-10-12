@@ -49,7 +49,7 @@
             </v-layout>
             
             <v-card-actions>
-              <div style="margin-left: 8px" v-if="registered">
+              <div style="margin-left: 8px" v-if="inThisClass">
                 <v-icon color="green">check_circle</v-icon>
                 <span>Terdaftar</span>
               </div>
@@ -106,6 +106,7 @@
         loadingFailed: false,
         me: '',
         registering: false,
+        registered: true,
         isClassOpen: false,
         deleteId: null,
         showDelete: false,
@@ -223,30 +224,36 @@
           })
           console.log(error.message);
         })
-      }
+      },
+      getRegistered () {
+        return axios.get(`${this.$config.apiBaseUrl}/api/class/registered`)
+        .then(response => {
+          this.registered = response.data
+        })
+      },
     },
     watch: {
       
     },
     computed: {
-      registered () {
+      inThisClass () {
         if (this.classData) {
-          var regs = this.classData.participants.find(participant => {
+          var found = this.classData.participants.find(participant => {
             return participant._id === this.me
           })
-          if (regs) {
-            console.log('sudah terdaftar di kelas', this.classData.name);
-            return true
-          }
-          else {
-            return false
-          }
+          return found ? true : false
         }
         else return false
       },
     },
     mounted () {
-      this.loadClassData()
+      this.getRegistered().then(() => {
+        this.loadClassData()
+      }).catch(error => {
+        this.loadingFailed = true
+        this.isLoading = false
+        console.error(error.message)
+      })
       this.getToggleClass()
       this.$store.commit('setShowBackBtn', true)
       localForage.getItem('apiUserId').then(id => {
