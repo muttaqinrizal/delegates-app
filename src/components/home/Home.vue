@@ -181,9 +181,6 @@ export default {
     }
   },
   methods: {
-    getApiPicture (name) {
-      return `${this.$config.apiBaseUrl}/api/static/images/${name}`
-    },
     subscribe() {
       Notification.requestPermission().then(permission => {
         this.subscription = permission

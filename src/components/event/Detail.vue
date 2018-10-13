@@ -92,9 +92,6 @@
       }
     },
     methods: {
-      getApiPicture(name) {
-        return commons.getApiPicture(name)
-      },
       loadEventData () {
         this.loadingFailed = false
         axios.get(`${this.$config.apiBaseUrl}/api/event/${this.$route.params.id}`)

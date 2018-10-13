@@ -115,9 +115,6 @@
     },
     methods: {
       ...mapActions(['notify']),
-      getApiPicture(name) {
-        return commons.getApiPicture(name)
-      },
       loadClassData () {
         this.loadingFailed = false
         axios.get(`${this.$config.apiBaseUrl}/api/class/${this.$route.params.id}`)

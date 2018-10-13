@@ -63,12 +63,6 @@ export default {
     }
   },
   methods: {
-    getPicture(path) {
-      return commons.getPicture(path)
-    },
-    getApiPicture(path) {
-      return commons.getApiPicture(path)
-    },
     logoutFn() {
       this.logoutLoading = true
       commons.logoutFn()

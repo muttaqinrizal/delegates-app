@@ -22,12 +22,12 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 let commons = {
-  getPicture (path) {
-    return require('../assets/' + path)
-  },
-  getApiPicture(name) {
-    return `${setting.apiBaseUrl}/api/static/images/${name}`
-  },
+  // getPicture (path) {
+  //   return require('../assets/' + path)
+  // },
+  // getApiPicture(name) {
+  //   return `${setting.apiBaseUrl}/api/static/images/${name}`
+  // },
   async getUserDetail() {
     var name = await localForage.getItem('userName') || ''
     var email = await localForage.getItem('userEmail') || ''
