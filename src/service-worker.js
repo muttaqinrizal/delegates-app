@@ -21,7 +21,8 @@ import localForage from 'localforage'
 
 let assetsToCache = [
   ...serviceWorkerOption.assets,
-  '/announcement'
+  '/announcement',
+  '/home'
   // '/css/roboto.css',
   // '/fonts/material-icon.woff2',
   // '/fonts/roboto-v18-latin-300.woff',

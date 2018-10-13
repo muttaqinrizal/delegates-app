@@ -8,7 +8,7 @@ export default new Vuex.Store({
     headerTitle: 'FLS Guide',
     activeNavigation: 'home',
     navigations: {
-      home: { icon: 'home', title: 'FLS Guide', path: '/' },
+      home: { icon: 'home', title: 'FLS Guide', path: '/home' },
       event: { icon: 'event', title: 'Acara', path: '/event' },
       vote: { icon: 'how_to_vote', title: 'Kelas', path: '/class' },
       // merchandise: { icon: 'shopping_cart', title: 'Merchandise', path: '/merchandise' },

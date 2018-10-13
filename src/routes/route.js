@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import authMid from '../middlewares/auth'
 
+const Redirect = () => import(/* webpackChunkName: "redirect" */ '../components/Redirect.vue')
 const Login = () => import(/* webpackChunkName: "login" */ '../components/user/Login.vue');
 const Home = () => import(/* webpackChunkName: "home" */ '../components/home/Home.vue')
 const Account = () => import(/* webpackChunkName: "account" */ '../components/user/Account.vue');
@@ -20,7 +21,8 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/', name: 'Home', beforeEnter: authMid.requireAuth, component: Home },
+    { path: '*', name: 'Redirect', beforeEnter: authMid.requireAuth, component: Redirect },
+    { path: '/home', name: 'Home', beforeEnter: authMid.requireAuth, component: Home },
     { path: '/login', name: 'Login', beforeEnter: authMid.requireNotAuth, component: Login },
     { path: '/account', name: 'Account', beforeEnter: authMid.requireAuth, component: Account },
     { path: '/event', name: 'Event', beforeEnter: authMid.requireAuth, component: Event },
