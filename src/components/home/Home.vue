@@ -317,24 +317,24 @@ export default {
 </script>
 
 <style>
-  .layout.row.wrap {
-    /* height: 100%;
-    overflow: auto; */
-  }
+  /* .layout.row.wrap {
+    height: 100%;
+    overflow: auto;
+  } */
 
-  .timeline-item {
-    /* text-align: left;
-    margin: 0 16px 16px 28px; */
-  }
+  /* .timeline-item {
+    text-align: left;
+    margin: 0 16px 16px 28px;
+  } */
 
   .timeline-item .detail {
     border: solid 2px;
   }
 
-  .timeline-others {
-    /* padding: 0; */
-    /* height: 40px; */
-  }
+  /* .timeline-others {
+    padding: 0;
+    height: 40px;
+  } */
   .margin-bottom-12 {
     margin-bottom: 12px;
   }

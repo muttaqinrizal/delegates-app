@@ -14,7 +14,7 @@
           </v-card> -->
           <v-avatar :size="128">
             <!-- <img :src="user.avatar" alt="" srcset=""> -->
-            <v-img lazy-src="/images/logo.png" :src="user.avatar"></v-img>
+            <v-img lazy-src="/images/fls-pp.png" :src="user.avatar"></v-img>
           </v-avatar>
           <div class="pt-4">
             {{user.name}}
