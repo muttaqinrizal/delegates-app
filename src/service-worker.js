@@ -34,7 +34,7 @@ let assetsToCache = [
   // '/fonts/roboto-v18-latin-regular.woff',
   // '/fonts/roboto-v18-latin-regular.woff2',
 ]
-assetsToCache = serviceWorkerOption.assets.filter(asset => { 
+assetsToCache = assetsToCache.filter(asset => { 
   //exclude inex and manifest
   return ['/index.html', '/manifest.json'].indexOf(asset) < 0 
 })
@@ -60,7 +60,7 @@ self.addEventListener('activate', function (event) {
         return caches.delete(cache)
       })).then(() => {
         console.log('[*] Claiming clients for current page');
-        // return self.clients.claim();
+        return self.clients.claim();
       })
     })
   )
