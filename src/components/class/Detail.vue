@@ -1,6 +1,6 @@
 <template>
-  <v-layout fluid grid-list-lg>
-    <v-flex>
+  <v-layout justify-center align-center>
+    <v-flex xs12 md6 lg6>
       <v-progress-circular
         v-if="isLoading"
         indeterminate

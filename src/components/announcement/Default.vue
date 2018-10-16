@@ -1,6 +1,6 @@
 <template>
-  <v-layout fluid grid-list-lg>
-    <v-flex xs12>
+  <v-layout fluid grid-list-lg justify-center align-center>
+    <v-flex xs12 lg6 md6>
       <v-card flat>
         <v-btn @click="readAll" v-show="hasNotif">Tandai sudah dibaca semua</v-btn>
         <v-list two-line>

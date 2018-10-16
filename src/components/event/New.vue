@@ -1,219 +1,221 @@
 <template>
   <v-container fluid grid-list-lg>
-    <v-flex xs12>
-      <v-card>
-        <v-container fluid grid-list-lg>
-          <v-form v-model="valid" ref="form">
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  v-model="title"
-                  v-validate="'required'"
-                  data-vv-as="Judul"
-                  :error-messages="errors.collect('title')"
-                  name="title"
-                  label="Judul"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex xs12>
-                <v-dialog
-                  ref="dialog"
-                  v-model="showDatepicker"
-                  :return-value.sync="date"
-                  persistent
-                  lazy
-                  full-width
-                  width="290px"
-                >
+    <v-layout justify-center align-center>
+      <v-flex xs12 md6 lg6>
+        <v-card>
+          <v-container fluid grid-list-lg>
+            <v-form v-model="valid" ref="form">
+              <v-layout row>
+                <v-flex>
                   <v-text-field
-                    slot="activator"
-                    v-model="date"
+                    v-model="title"
                     v-validate="'required'"
-                    data-vv-as="Tanggal"
-                    data-vv-validate-on="change"
-                    :error-messages="errors.collect('date')"
-                    name="date"
-                    label="Tanggal"
-                    prepend-icon="event"
-                    readonly
+                    data-vv-as="Judul"
+                    :error-messages="errors.collect('title')"
+                    name="title"
+                    label="Judul"
+                    required
                   ></v-text-field>
-                  <v-date-picker v-model="date" scrollable>
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="showDatepicker = false">Cancel</v-btn>
-                    <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-                  </v-date-picker>
-                </v-dialog>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs6>
-                <v-dialog
-                  ref="startTimeDialog"
-                  v-model="showStart"
-                  :return-value.sync="start"
-                  persistent
-                  lazy
-                  full-width
-                  width="290px"
-                >
+                </v-flex>
+              </v-layout>
+              <v-layout>
+                <v-flex xs12>
+                  <v-dialog
+                    ref="dialog"
+                    v-model="showDatepicker"
+                    :return-value.sync="date"
+                    persistent
+                    lazy
+                    full-width
+                    width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="date"
+                      v-validate="'required'"
+                      data-vv-as="Tanggal"
+                      data-vv-validate-on="change"
+                      :error-messages="errors.collect('date')"
+                      name="date"
+                      label="Tanggal"
+                      prepend-icon="event"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker v-model="date" scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="showDatepicker = false">Cancel</v-btn>
+                      <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+                    </v-date-picker>
+                  </v-dialog>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs6>
+                  <v-dialog
+                    ref="startTimeDialog"
+                    v-model="showStart"
+                    :return-value.sync="start"
+                    persistent
+                    lazy
+                    full-width
+                    width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="start"
+                      v-validate="'required'"
+                      data-vv-as="Waktu mulai"
+                      data-vv-validate-on="change"
+                      :error-messages="errors.collect('start')"
+                      name="start"
+                      key="start-input"
+                      label="Waktu mulai"
+                      prepend-icon="access_time"
+                      readonly
+                    ></v-text-field>
+                    <v-time-picker
+                      format="24hr"
+                      v-model="start"
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="showStart = false">Cancel</v-btn>
+                      <v-btn flat color="primary" @click="$refs.startTimeDialog.save(start)">OK</v-btn>
+                    </v-time-picker>
+                  </v-dialog>
+                </v-flex>
+                <v-flex xs6>
+                  <v-dialog
+                    ref="endTimeDialog"
+                    v-model="showEnd"
+                    :return-value.sync="end"
+                    persistent
+                    lazy
+                    full-width
+                    width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="end"
+                      v-validate="'required'"
+                      data-vv-as="Waktu selesai"
+                      data-vv-validate-on="change"
+                      :error-messages="errors.collect('end')"
+                      name="end"
+                      label="Waktu selesai"
+                      prepend-icon="access_time"
+                      readonly
+                    ></v-text-field>
+                    <v-time-picker
+                      format="24hr"
+                      v-model="end"
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="showEnd = false">Cancel</v-btn>
+                      <v-btn flat color="primary" @click="$refs.endTimeDialog.save(end)">OK</v-btn>
+                    </v-time-picker>
+                  </v-dialog>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
                   <v-text-field
-                    slot="activator"
-                    v-model="start"
+                    prepend-icon="wc"
+                    v-model="dresscode"
                     v-validate="'required'"
-                    data-vv-as="Waktu mulai"
-                    data-vv-validate-on="change"
-                    :error-messages="errors.collect('start')"
-                    name="start"
-                    key="start-input"
-                    label="Waktu mulai"
-                    prepend-icon="access_time"
-                    readonly
+                    data-vv-as="Dresscode"
+                    :error-messages="errors.collect('dresscode')"
+                    name="dresscode"
+                    label="Dresscode"
+                    required
                   ></v-text-field>
-                  <v-time-picker
-                    format="24hr"
-                    v-model="start"
-                  >
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="showStart = false">Cancel</v-btn>
-                    <v-btn flat color="primary" @click="$refs.startTimeDialog.save(start)">OK</v-btn>
-                  </v-time-picker>
-                </v-dialog>
-              </v-flex>
-              <v-flex xs6>
-                <v-dialog
-                  ref="endTimeDialog"
-                  v-model="showEnd"
-                  :return-value.sync="end"
-                  persistent
-                  lazy
-                  full-width
-                  width="290px"
-                >
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
                   <v-text-field
-                    slot="activator"
-                    v-model="end"
+                    prepend-icon="location_on"
+                    v-model="location"
                     v-validate="'required'"
-                    data-vv-as="Waktu selesai"
-                    data-vv-validate-on="change"
-                    :error-messages="errors.collect('end')"
-                    name="end"
-                    label="Waktu selesai"
-                    prepend-icon="access_time"
-                    readonly
+                    data-vv-as="Lokasi"
+                    :error-messages="errors.collect('location')"
+                    name="location"
+                    label="Lokasi"
+                    required
                   ></v-text-field>
-                  <v-time-picker
-                    format="24hr"
-                    v-model="end"
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-textarea
+                    v-model="description"
+                    outline
+                    data-vv-as="Deskripsi"
+                    label="Deskripsi"
+                    hint="Markdown supported"
+                    persistent-hint
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+              <v-layout>
+                <v-flex class="text-xs-left">Preview Deskripsi</v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-layout row>
+                <v-flex >
+                  <div class="text-xs-left preview-md" v-html="compiledDesc"></div>
+                </v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-layout row v-if="rawEventData.image">
+                <v-flex>
+                  <div class="text-xs-left">Gambar sekarang</div>
+                </v-flex>
+                <v-flex xs3>
+                  <v-img
+                    :src="$config.apiBaseUrl + rawEventData.image"
+                    aspect-ratio="1"
+                    class="grey lighten-2"
                   >
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="showEnd = false">Cancel</v-btn>
-                    <v-btn flat color="primary" @click="$refs.endTimeDialog.save(end)">OK</v-btn>
-                  </v-time-picker>
-                </v-dialog>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  prepend-icon="wc"
-                  v-model="dresscode"
-                  v-validate="'required'"
-                  data-vv-as="Dresscode"
-                  :error-messages="errors.collect('dresscode')"
-                  name="dresscode"
-                  label="Dresscode"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  prepend-icon="location_on"
-                  v-model="location"
-                  v-validate="'required'"
-                  data-vv-as="Lokasi"
-                  :error-messages="errors.collect('location')"
-                  name="location"
-                  label="Lokasi"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-textarea
-                  v-model="description"
-                  outline
-                  data-vv-as="Deskripsi"
-                  label="Deskripsi"
-                  hint="Markdown supported"
-                  persistent-hint
-                ></v-textarea>
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex class="text-xs-left">Preview Deskripsi</v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-flex >
-                <div class="text-xs-left preview-md" v-html="compiledDesc"></div>
-              </v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-layout row v-if="rawEventData.image">
-              <v-flex>
-                <div class="text-xs-left">Gambar sekarang</div>
-              </v-flex>
-              <v-flex xs3>
-                <v-img
-                  :src="$config.apiBaseUrl + rawEventData.image"
-                  aspect-ratio="1"
-                  class="grey lighten-2"
-                >
-                  <v-layout
-                    slot="placeholder"
-                    fill-height
-                    align-center
-                    justify-center
-                    ma-1
-                  >
-                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                  </v-layout>
-                </v-img>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <file-pond
-                  :files="images"
-                  v-model="images"
-                  name="image"
-                  v-validate="'array'"
-                  :allow-multiple="false"
-                  image-preview-max-height="100"
-                  :allow-image-preview="true"
-                  accepted-file-types="image/jpeg, image/png"
-                  v-on:addfile="addfile"
-                  v-on:removefile="removefile"
-                  label-idle="Klik untuk menambah/mengganti gambar"
-                ></file-pond>
-                <div v-if="errors.has('image')" class="text-xs-left caption">Gambar harus diisi</div>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-btn :disabled="isLoading" @click="saveEvent()" color="primary">{{isLoading ? 'Menyimpan..' : 'Simpan'}}</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-form>
-        </v-container>
-      </v-card>
-    </v-flex>
+                    <v-layout
+                      slot="placeholder"
+                      fill-height
+                      align-center
+                      justify-center
+                      ma-1
+                    >
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <file-pond
+                    :files="images"
+                    v-model="images"
+                    name="image"
+                    v-validate="'array'"
+                    :allow-multiple="false"
+                    image-preview-max-height="100"
+                    :allow-image-preview="true"
+                    accepted-file-types="image/jpeg, image/png"
+                    v-on:addfile="addfile"
+                    v-on:removefile="removefile"
+                    label-idle="Klik untuk menambah/mengganti gambar"
+                  ></file-pond>
+                  <div v-if="errors.has('image')" class="text-xs-left caption">Gambar harus diisi</div>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-btn :disabled="isLoading" @click="saveEvent()" color="primary">{{isLoading ? 'Menyimpan..' : 'Simpan'}}</v-btn>
+                </v-flex>
+              </v-layout>
+            </v-form>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>

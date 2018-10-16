@@ -1,114 +1,116 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-flex xs12>
-      <v-card>
-        <v-container fluid grid-list-lg>
-          <v-form v-model="valid" ref="form">
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  v-model="name"
-                  v-validate="'required'"
-                  data-vv-as="Nama Kelas"
-                  :error-messages="errors.collect('name')"
-                  name="name"
-                  label="Nama Kelas"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  v-model="panelist"
-                  v-validate="'required'"
-                  data-vv-as="Panelis"
-                  :error-messages="errors.collect('panelist')"
-                  name="panelist"
-                  label="Panelis"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  v-model="max"
-                  v-validate="'required|numeric'"
-                  data-vv-as="Kapasitas"
-                  :error-messages="errors.collect('max')"
-                  name="max"
-                  label="Kapasitas"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  v-model="location"
-                  v-validate="'required'"
-                  data-vv-as="Lokasi"
-                  :error-messages="errors.collect('location')"
-                  name="location"
-                  label="Lokasi"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-textarea
-                  v-model="description"
-                  outline
-                  v-validate="'required'"
-                  data-vv-as="Deskripsi"
-                  :error-messages="errors.collect('description')"
-                  name="description"
-                  required
-                  label="Deskripsi"
-                  hint="Markdown supported"
-                  persistent-hint
-                ></v-textarea>
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex class="text-xs-left">Preview Deskripsi</v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-flex >
-                <div class="text-xs-left preview-md" v-html="compiledDesc"></div>
-              </v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-flex>
-                <file-pond
-                  :files="images"
-                  v-model="images"
-                  name="image"
-                  v-validate="'array'"
-                  :allow-multiple="false"
-                  image-preview-max-height="100"
-                  :allow-image-preview="true"
-                  accepted-file-types="image/jpeg, image/png"
-                  v-on:addfile="addfile"
-                  v-on:removefile="removefile"
-                  label-idle="Klik untuk menambahkan gambar"
-                ></file-pond>
-                <div v-if="errors.has('image')" class="text-xs-left caption">Gambar harus diisi</div>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-btn :disabled="isLoading" @click="saveClass" color="primary">{{isLoading ? 'Menyimpan..' : 'Simpan'}}</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-form>
-        </v-container>
-      </v-card>
-    </v-flex>
+  <v-container>
+    <v-layout justify-center align-center>
+      <v-flex xs12 md6 lg6>
+        <v-card>
+          <v-container fluid grid-list-lg>
+            <v-form v-model="valid" ref="form">
+              <v-layout row>
+                <v-flex>
+                  <v-text-field
+                    v-model="name"
+                    v-validate="'required'"
+                    data-vv-as="Nama Kelas"
+                    :error-messages="errors.collect('name')"
+                    name="name"
+                    label="Nama Kelas"
+                    required
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-text-field
+                    v-model="panelist"
+                    v-validate="'required'"
+                    data-vv-as="Panelis"
+                    :error-messages="errors.collect('panelist')"
+                    name="panelist"
+                    label="Panelis"
+                    required
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-text-field
+                    v-model="max"
+                    v-validate="'required|numeric'"
+                    data-vv-as="Kapasitas"
+                    :error-messages="errors.collect('max')"
+                    name="max"
+                    label="Kapasitas"
+                    required
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-text-field
+                    v-model="location"
+                    v-validate="'required'"
+                    data-vv-as="Lokasi"
+                    :error-messages="errors.collect('location')"
+                    name="location"
+                    label="Lokasi"
+                    required
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-textarea
+                    v-model="description"
+                    outline
+                    v-validate="'required'"
+                    data-vv-as="Deskripsi"
+                    :error-messages="errors.collect('description')"
+                    name="description"
+                    required
+                    label="Deskripsi"
+                    hint="Markdown supported"
+                    persistent-hint
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+              <v-layout>
+                <v-flex class="text-xs-left">Preview Deskripsi</v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-layout row>
+                <v-flex >
+                  <div class="text-xs-left preview-md" v-html="compiledDesc"></div>
+                </v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-layout row>
+                <v-flex>
+                  <file-pond
+                    :files="images"
+                    v-model="images"
+                    name="image"
+                    v-validate="'array'"
+                    :allow-multiple="false"
+                    image-preview-max-height="100"
+                    :allow-image-preview="true"
+                    accepted-file-types="image/jpeg, image/png"
+                    v-on:addfile="addfile"
+                    v-on:removefile="removefile"
+                    label-idle="Klik untuk menambahkan gambar"
+                  ></file-pond>
+                  <div v-if="errors.has('image')" class="text-xs-left caption">Gambar harus diisi</div>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-btn :disabled="isLoading" @click="saveClass" color="primary">{{isLoading ? 'Menyimpan..' : 'Simpan'}}</v-btn>
+                </v-flex>
+              </v-layout>
+            </v-form>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>

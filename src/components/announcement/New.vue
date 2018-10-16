@@ -1,89 +1,91 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-flex xs12>
-      <v-progress-circular
-        v-if="isLoading"
-        indeterminate
-        color="primary"
-      ></v-progress-circular>
-      <v-card v-else>
-        <v-container fluid grid-list-lg>
-          <v-form v-model="valid" ref="form">
-            <v-layout row>
-              <v-flex>
-                <v-text-field
-                  v-model="title"
-                  v-validate="'required'"
-                  data-vv-as="Judul"
-                  :error-messages="errors.collect('title')"
-                  name="title"
-                  label="Judul"
-                  required
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-autocomplete
-                  v-model="scope"
-                  v-validate="'required'"
-                  data-vv-as="Room"
-                  :error-messages="errors.collect('scope')"
-                  name="scope"
-                  label="Room"
-                  required
-                  :items="scopes"
-                ></v-autocomplete>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-textarea
-                  v-model="content"
-                  outline
-                  v-validate="'required'"
-                  data-vv-as="Konten"
-                  :error-messages="errors.collect('content')"
-                  name="content"
-                  required
-                  label="Konten"
-                  hint="Markdown supported"
-                  persistent-hint
-                ></v-textarea>
-              </v-flex>
-            </v-layout>
-            <v-layout>
-              <v-flex class="text-xs-left">Preview Konten</v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-flex >
-                <div class="text-xs-left preview-md" v-html="compiledContent"></div>
-              </v-flex>
-            </v-layout>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-flex>
-                <file-pond
-                  :files="images"
-                  :allow-multiple="true"
-                  image-preview-max-height="100"
-                  :allow-image-preview="true"
-                  accepted-file-types="image/jpeg, image/png"
-                  v-on:addfile="addfile"
-                  label-idle="Klik untuk menambahkan gambar"
-                ></file-pond>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex>
-                <v-btn :disabled="saveLoading" :loading="saveLoading" @click="saveAnnouncement" color="primary">Kirim</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-form>
-        </v-container>
-      </v-card>
-    </v-flex>
+  <v-container>
+    <v-layout justify-center align-center row>
+      <v-flex xs12 md6 lg6>
+        <v-progress-circular
+          v-if="isLoading"
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
+        <v-card v-else>
+          <v-container fluid grid-list-lg>
+            <v-form v-model="valid" ref="form">
+              <v-layout row>
+                <v-flex>
+                  <v-text-field
+                    v-model="title"
+                    v-validate="'required'"
+                    data-vv-as="Judul"
+                    :error-messages="errors.collect('title')"
+                    name="title"
+                    label="Judul"
+                    required
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-autocomplete
+                    v-model="scope"
+                    v-validate="'required'"
+                    data-vv-as="Room"
+                    :error-messages="errors.collect('scope')"
+                    name="scope"
+                    label="Room"
+                    required
+                    :items="scopes"
+                  ></v-autocomplete>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-textarea
+                    v-model="content"
+                    outline
+                    v-validate="'required'"
+                    data-vv-as="Konten"
+                    :error-messages="errors.collect('content')"
+                    name="content"
+                    required
+                    label="Konten"
+                    hint="Markdown supported"
+                    persistent-hint
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+              <v-layout>
+                <v-flex class="text-xs-left">Preview Konten</v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-layout row>
+                <v-flex >
+                  <div class="text-xs-left preview-md" v-html="compiledContent"></div>
+                </v-flex>
+              </v-layout>
+              <v-divider></v-divider>
+              <v-layout row>
+                <v-flex>
+                  <file-pond
+                    :files="images"
+                    :allow-multiple="true"
+                    image-preview-max-height="100"
+                    :allow-image-preview="true"
+                    accepted-file-types="image/jpeg, image/png"
+                    v-on:addfile="addfile"
+                    label-idle="Klik untuk menambahkan gambar"
+                  ></file-pond>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex>
+                  <v-btn :disabled="saveLoading" :loading="saveLoading" @click="saveAnnouncement" color="primary">Kirim</v-btn>
+                </v-flex>
+              </v-layout>
+            </v-form>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>

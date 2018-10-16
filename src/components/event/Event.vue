@@ -1,6 +1,6 @@
 <template>
-  <v-layout fluid grid-list-lg>
-    <v-flex xs12>
+  <v-layout justify-center align-center>
+    <v-flex xs12 md6 lg6>
       <v-card v-if="$store.state.isRanger">
         <v-list two-line>
           <v-list-tile

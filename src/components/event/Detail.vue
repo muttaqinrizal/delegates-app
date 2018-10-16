@@ -1,71 +1,75 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-progress-circular
-      v-if="isLoading"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <template v-else-if="loadingFailed">
-      <p>Gagal memuat event</p>
-      <v-btn color="primary" @click="loadEventData()">Muat ulang</v-btn>
-    </template>
-    <v-card tile v-else>
-      <v-card-text class="text-xs-center">
-        <v-container xs12 sm10 md6>
-          <v-layout row wrap mb-4>
-            <v-flex xs9>
-              <div style="padding-left: 10px;">
-                <div style="text-align: left; margin-bottom: 8px;">
-                  <strong>{{ eventData.title }}</strong>
-                  <span class="now" v-if="eventData.now">Sekarang</span>
-                </div>
-                <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                  {{ eventData.dresscode }}
-                </div>
-                <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                  {{ eventData.start }} - {{ eventData.end }} WIB
-                </div>
-                <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
-                  {{ eventData.date || '-'}}
-                </div>
-                <div class="bullet location" style="text-align: left;">
-                  {{ eventData.location }}
-                </div>
-              </div>
-            </v-flex>
-            <v-flex d-flex xs3>
-              <v-img aspect-ratio="1" contain position="top left" :src="$config.apiBaseUrl + eventData.image"></v-img>
-            </v-flex>
-          </v-layout>
-          <v-layout>
-            <v-flex class="text-xs-left">
-              <div class="preview-md" v-html="compiledDesc"></div>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card-text>
-      <template v-if="$store.state.isRanger">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="deleteDialog(eventData._id)">
-            <v-icon color="red">delete_forever</v-icon>
-          </v-btn>
-          <v-btn icon @click="$router.push(`/event/edit/${eventData._id}`)">
-            <v-icon color="green">edit</v-icon>
-          </v-btn>
-        </v-card-actions>     
-      </template>
-    </v-card>
-    <v-dialog v-model="showDelete" persistent max-width="290">
-      <v-card>
-        <v-card-title class="headline">Hapus acara?</v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" :disabled="deleteLoading" @click.native="closeDelete()">Batal</v-btn>
-          <v-btn color="error" :loading="deleteLoading" outline flat @click.native="deleteEvent()">Hapus</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+  <v-container grid-list-lg>
+    <v-layout justify-center align-center>
+      <v-flex xs12 md6 lg6>
+        <v-progress-circular
+          v-if="isLoading"
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
+        <template v-else-if="loadingFailed">
+          <p>Gagal memuat event</p>
+          <v-btn color="primary" @click="loadEventData()">Muat ulang</v-btn>
+        </template>
+        <v-card tile v-else>
+          <v-card-text class="text-xs-center">
+            <v-container xs12 sm10 md6>
+              <v-layout row wrap mb-4>
+                <v-flex xs9>
+                  <div style="padding-left: 10px;">
+                    <div style="text-align: left; margin-bottom: 8px;">
+                      <strong>{{ eventData.title }}</strong>
+                      <span class="now" v-if="eventData.now">Sekarang</span>
+                    </div>
+                    <div class="bullet dresscode" style="text-align: left; line-height: normal; margin-bottom: 4px;">
+                      {{ eventData.dresscode }}
+                    </div>
+                    <div class="bullet time" style="text-align: left; line-height: normal; margin-bottom: 4px;">
+                      {{ eventData.start }} - {{ eventData.end }} WIB
+                    </div>
+                    <div class="bullet date" style="text-align: left; line-height: normal; margin-bottom: 4px;">
+                      {{ eventData.date || '-'}}
+                    </div>
+                    <div class="bullet location" style="text-align: left;">
+                      {{ eventData.location }}
+                    </div>
+                  </div>
+                </v-flex>
+                <v-flex d-flex xs3>
+                  <v-img aspect-ratio="1" contain position="top left" :src="$config.apiBaseUrl + eventData.image"></v-img>
+                </v-flex>
+              </v-layout>
+              <v-layout>
+                <v-flex class="text-xs-left">
+                  <div class="preview-md" v-html="compiledDesc"></div>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <template v-if="$store.state.isRanger">
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn icon @click="deleteDialog(eventData._id)">
+                <v-icon color="red">delete_forever</v-icon>
+              </v-btn>
+              <v-btn icon @click="$router.push(`/event/edit/${eventData._id}`)">
+                <v-icon color="green">edit</v-icon>
+              </v-btn>
+            </v-card-actions>     
+          </template>
+        </v-card>
+        <v-dialog v-model="showDelete" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">Hapus acara?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" :disabled="deleteLoading" @click.native="closeDelete()">Batal</v-btn>
+              <v-btn color="error" :loading="deleteLoading" outline flat @click.native="deleteEvent()">Hapus</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
