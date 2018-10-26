@@ -67,11 +67,13 @@ export default {
       this.logoutLoading = true
       commons.logoutFn()
       .then((e) => {
-        console.log(e);
+        console.log('[*] Sukses logout');
         this.logoutLoading = false
         this.$router.push('/login')
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log('[X] error:', e);
+        
         this.logoutLoading = false
       })
     }

@@ -105,7 +105,7 @@ export default {
           }
           this.setLogedIn(true)
           if (this.$route.query.redirect) this.$router.replace({path: this.$route.query.redirect})
-          else this.$router.replace({path: '/'})
+          else this.$router.replace({path: '/home'})
         }
         this.loginLoading = false
       } catch (error) {

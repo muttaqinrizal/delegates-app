@@ -108,12 +108,14 @@ let commons = {
         console.log('[X]', error.message)
       })
     })
-    return Promise.all([
-      events.dropInstance(),
-      annc.dropInstance(),
-      classRoom.dropInstance(),
-      localForage.clear()
-    ])
+    console.log('[*] deleting user data');
+    
+    // return Promise.all([
+      events.dropInstance()
+      annc.dropInstance()
+      classRoom.dropInstance()
+      return localForage.clear()
+    // ])
   }
 }
 

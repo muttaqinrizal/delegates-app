@@ -103,7 +103,7 @@
                 v-if="!registered && !$store.state.isRanger"
                 :disabled="(item.max - item.participants.length) <= 0 || registering || !isClassOpen"
                 color="primary"
-                @click="registerClass(item._id)"
+                @click="registerDialog(item._id)"
               >
                 Daftar
               </v-btn>
@@ -156,6 +156,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="showConfirm" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">Pilih kelas ini?</v-card-title>
+        <v-card-text class="text-xs-left">
+          kamu hanya diberi satu kali kesempatan untuk memilih
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" outline @click.native="showConfirm = false">Batal</v-btn>
+          <v-btn color="primary" @click.native="registerClass()">Pilih</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 <script>
@@ -182,6 +195,8 @@ export default {
       toggleLoading: false,
       showToggle: false,
       isOffline: false,
+      showConfirm: false,
+      classId: '',
     }
   },
   methods: {
@@ -215,13 +230,18 @@ export default {
         console.log(err);
       })
     },
-    registerClass(id) {
+    registerDialog(id) {
+      this.classId = id
+      this.showConfirm = true
+    },
+    registerClass() {
       this.registering = true
+      this.showConfirm = false
       axios({
         url: `${this.$config.apiBaseUrl}/api/class/attend`,
         method: 'post',
         data: {
-          classId: id
+          classId: this.classId
         }
       })
       .then(response => {
