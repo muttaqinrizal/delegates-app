@@ -5,10 +5,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    headerTitle: 'FLS Guide',
+    headerTitle: 'KAJIAN KODING',
     activeNavigation: 'home',
     navigations: {
-      home: { icon: 'home', title: 'FLS Guide', path: '/home' },
+      home: { icon: 'home', title: 'Kajian Koding', path: '/home' },
       event: { icon: 'event', title: 'Acara', path: '/event' },
       vote: { icon: 'how_to_vote', title: 'Kelas', path: '/class' },
       // merchandise: { icon: 'shopping_cart', title: 'Merchandise', path: '/merchandise' },
