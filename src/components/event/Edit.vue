@@ -124,7 +124,7 @@
                     data-vv-as="Dresscode"
                     :error-messages="errors.collect('dresscode')"
                     name="dresscode"
-                    label="Dresscode"
+                    label="Requirement"
                     required
                   ></v-text-field>
                 </v-flex>
