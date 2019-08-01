@@ -1,6 +1,6 @@
 export default {
   production: {
-    baseUrl: 'https://kajiankoding.herokuapp.com/',
+    baseUrl: 'https://kajiankoding.netlify.com/',
     apiBaseUrl: 'https://backendkajian.herokuapp.com',
     authServer: 'https://backend-kajiankoding.herokuapp.com'
   },
